@@ -8,10 +8,13 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
   datasource:
-    url: jdbc:mysql://localhost:3306/broker_schema
-    username: u
-    password: 1
+    url: jdbc:mysql://localhost:3306/broker_schema?useSSL=false
+    username: root
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  liquibase:
+    change-log: classpath:db/db.changelog-master.yaml
 
   security:
     user:
