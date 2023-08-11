@@ -1,0 +1,365 @@
+databaseChangeLog:
+  - logicalFilePath: db/db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: a.sherstneva
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: full_name
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: VARCHAR(15)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: department
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(12)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: ticket
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: operation
+                  type: VARCHAR(4)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: broker_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: BOOL
+                  constraints:
+                    nullable: false
+              - column:
+                  name: chief_broker_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: when_opened
+                  type: DATETIME
+              - column:
+                  name: when_closed
+                  type: DATETIME
+        - addForeignKeyConstraint:
+            baseTableName: ticket
+            baseColumnNames: broker_id
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: fk_ticket_broker_idx
+        - addForeignKeyConstraint:
+            baseTableName: ticket
+            baseColumnNames: chief_broker_id
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: fk_ticket_chief_broker_idx
+        - createTable:
+            tableName: bank_account
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(250)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: DECIMAL(15,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: department
+                  type: VARCHAR(10)
+              - column:
+                  name: type
+                  type: VARCHAR(8)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: stock
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: company_name
+                  type: VARCHAR(250)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price_buy
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price_sell
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: stock_in_bank_account
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: bank_account_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: INT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: stock_in_bank_account
+            baseColumnNames: bank_account_id
+            referencedTableName: bank_account
+            referencedColumnNames: id
+            constraintName: fk_stock_in_bank_account_bank_account_idx
+        - addForeignKeyConstraint:
+            baseTableName: stock_in_bank_account
+            baseColumnNames: stock_id
+            referencedTableName: stock
+            referencedColumnNames: id
+            constraintName: fk_stock_in_bank_account_stock_idx
+        - createTable:
+            tableName: bank_account_transaction
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sender_bank_account_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recipient_bank_account_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sender_user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: operation
+                  type: VARCHAR(8)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transfer_amount
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_datetime
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock_id
+                  type: INT
+              - column:
+                  name: amount_stock
+                  type: INT
+              - column:
+                  name: price_stock
+                  type: DECIMAL(10,2)
+        - addForeignKeyConstraint:
+            baseTableName: bank_account_transaction
+            baseColumnNames: sender_bank_account_id
+            referencedTableName: bank_account
+            referencedColumnNames: id
+            constraintName: fk_bank_account_transaction_sender_idx
+        - addForeignKeyConstraint:
+            baseTableName: bank_account_transaction
+            baseColumnNames: recipient_bank_account_id
+            referencedTableName: bank_account
+            referencedColumnNames: id
+            constraintName: fk_bank_account_transaction_recipient_idx
+        - addForeignKeyConstraint:
+            baseTableName: bank_account_transaction
+            baseColumnNames: sender_user_id
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: fk_bank_account_transaction_user_idx
+        - addForeignKeyConstraint:
+            baseTableName: bank_account_transaction
+            baseColumnNames: stock_id
+            referencedTableName: stock
+            referencedColumnNames: id
+            constraintName: fk_bank_account_transaction_stock_idx
+        - createTable:
+            tableName: stock_in_ticket
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ticket_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: BOOL
+                  constraints:
+                    nullable: false
+              - column:
+                  name: bank_account_transaction_id
+                  type: INT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: stock_in_ticket
+            baseColumnNames: ticket_id
+            referencedTableName: ticket
+            referencedColumnNames: id
+            constraintName: fk_stock_in_ticket_ticket_idx
+        - addForeignKeyConstraint:
+            baseTableName: stock_in_ticket
+            baseColumnNames: stock_id
+            referencedTableName: stock
+            referencedColumnNames: id
+            constraintName: fk_stock_in_ticket_stock_idx
+        - addUniqueConstraint:
+            tableName: stock_in_ticket
+            columnNames: bank_account_transaction_id
+            constraintName: bank_account_transaction_id_unique
+        - addForeignKeyConstraint:
+            baseTableName: stock_in_ticket
+            baseColumnNames: bank_account_transaction_id
+            referencedTableName: bank_account_transaction
+            referencedColumnNames: id
+            constraintName: fx_stock_in_ticket_bank_account_transaction_idx
+        - createTable:
+            tableName: user_bank_account
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: bank_account_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: user_bank_account
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
+            constraintName: fk_user_has_bank_account_idx
+            deferrable: false
+            initiallyDeferred: false
+        - addForeignKeyConstraint:
+            baseTableName: user_bank_account
+            baseColumnNames: bank_account_id
+            referencedTableName: bank_account
+            referencedColumnNames: id
+            constraintName: fk_bank_account_has_user_idx
+            deferrable: false
+            initiallyDeferred: false
+        - createTable:
+            tableName: investor
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: full_name
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount_invested
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
