@@ -1,5 +1,13 @@
-FROM openjdk:17.0.2-jdk-oracle
+FROM openjdk:17-jdk-slim as builder
+WORKDIR /opt/app
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY ./src ./src
+RUN ./mvnw clean install
+
+FROM openjdk:17-jdk-slim
+WORKDIR /opt/app
+COPY --from=builder /opt/app/target/*.jar /opt/app/*.jar
 EXPOSE 8484
-VOLUME /tmp
-COPY /target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java", "-jar", "/opt/app/*.jar"]
