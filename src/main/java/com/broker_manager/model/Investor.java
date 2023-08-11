@@ -1,4 +1,4 @@
-package com.broker_manager.models;
+package com.broker_manager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ public class Investor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
 
     @Column(name = "full_name")
     private String fullName;

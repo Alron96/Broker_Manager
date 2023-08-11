@@ -1,7 +1,7 @@
-package com.broker_manager.models;
+package com.broker_manager.model;
 
-import com.broker_manager.models.enums.Department;
-import com.broker_manager.models.enums.Role;
+import com.broker_manager.model.enums.Department;
+import com.broker_manager.model.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Getter
 @Setter
 @ToString
@@ -22,7 +22,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
 
     @Column(name = "full_name")
     private String fullName;

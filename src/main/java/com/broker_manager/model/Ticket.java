@@ -1,6 +1,6 @@
-package com.broker_manager.models;
+package com.broker_manager.model;
 
-import com.broker_manager.models.enums.Operation;
+import com.broker_manager.model.enums.Operation;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tickets")
+@Table(name = "ticket")
 @Getter
 @Setter
 @ToString
@@ -19,7 +19,7 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
 
     @Enumerated
     private Operation operation;

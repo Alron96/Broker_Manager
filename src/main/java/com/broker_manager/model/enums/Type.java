@@ -1,4 +1,4 @@
-package com.broker_manager.models.enums;
+package com.broker_manager.model.enums;
 
 public enum Type {
     PERSONAL,
