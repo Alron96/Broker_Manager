@@ -301,13 +301,17 @@ databaseChangeLog:
             baseColumnNames: stock_id
             referencedTableName: stock
             referencedColumnNames: id
-            constraintName: fk_stock_in_ticket_bank_account_transaction_id_idx
+            constraintName: fk_stock_in_ticket_stock_idx
+        - addUniqueConstraint:
+            tableName: stock_in_ticket
+            columnNames: bank_account_transaction_id
+            constraintName: bank_account_transaction_id_unique
         - addForeignKeyConstraint:
             baseTableName: stock_in_ticket
             baseColumnNames: bank_account_transaction_id
             referencedTableName: bank_account_transaction
             referencedColumnNames: id
-            constraintName: fk_stock_in_ticket_stock_idx
+            constraintName: fx_stock_in_ticket_bank_account_transaction_idx
         - createTable:
             tableName: user_bank_account
             columns:
