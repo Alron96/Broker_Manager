@@ -11,11 +11,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     open-in-view: false
 
-  datasource:
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
   liquibase:
     change-log: classpath:db/db.changelog-master.yaml
 
