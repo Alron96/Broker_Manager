@@ -1,13 +1,11 @@
-FROM openjdk:17-jdk-slim as builder
-WORKDIR /opt/app
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline
+FROM maven:3.8.4-openjdk-17 as builder
+WORKDIR /opt/broker
+COPY pom.xml ./
 COPY ./src ./src
-RUN ./mvnw clean install
 
-FROM openjdk:17-jdk-slim
-WORKDIR /opt/app
-COPY --from=builder /opt/app/target/*.jar /opt/app/*.jar
+RUN mvn clean install
+FROM maven:3.8.4-openjdk-17
+WORKDIR /opt/broker
+COPY --from=builder /opt/broker/target/*.jar /opt/broker/*.jar
 EXPOSE 8484
-ENTRYPOINT ["java", "-jar", "/opt/app/*.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=deploy", "-jar", "/opt/broker/*.jar"]
