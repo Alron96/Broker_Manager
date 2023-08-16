@@ -1,23 +1,23 @@
 spring:
   profiles:
-    active: deploy
+    active: local
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     open-in-view: false
 
-  liquibase:
-    change-log: classpath:db/db.changelog-master.yaml
+#  liquibase:
+#    change-log: classpath:db/db.changelog-master.yaml
 
-  security:
-    user:
-      name: user
-      password: 1
+#  security:
+#    user:
+#      name: user
+#      password: 1
 
 logging:
   level:
