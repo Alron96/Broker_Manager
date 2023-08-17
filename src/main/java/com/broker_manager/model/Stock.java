@@ -8,6 +8,7 @@ import lombok.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "stock")
 @Getter
 @Setter
 @ToString

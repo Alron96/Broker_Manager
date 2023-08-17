@@ -1,12 +1,12 @@
 package com.broker_manager.service;
 
-import com.broker_manager.exception.NotFoundException;
+import com.broker_manager.util.error.NotFoundException;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Role;
 import com.broker_manager.repository.UserRepository;
-import com.broker_manager.repository.UserToRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +16,10 @@ public class ChiefBrokerService {
 
     private final UserRepository userRepository;
 
-    public ChiefBrokerService(UserRepository userRepository, UserToRepository userToRepository) {
+    @Autowired
+    public ChiefBrokerService(UserRepository userRepository) {
         this.userRepository = userRepository;
-      }
+    }
 
     public List<User> getBrokersByDepartment(Department department) {
         return userRepository.findByDepartmentAndRole(department, Role.BROKER);
@@ -43,7 +44,7 @@ public class ChiefBrokerService {
     }
 
     @Transactional
-    public void deleteUser (Integer id) {
+    public void deleteUser(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("ChiefBroker not found"));
 

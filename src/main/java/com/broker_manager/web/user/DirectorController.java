@@ -3,13 +3,15 @@ package com.broker_manager.web.user;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Role;
 import com.broker_manager.service.DirectorService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/director")
+@RequestMapping(value = DirectorController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DirectorController {
+    static final String REST_URL = "/director";
 
     private final DirectorService directorService;
 

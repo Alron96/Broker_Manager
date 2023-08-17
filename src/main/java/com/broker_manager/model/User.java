@@ -26,19 +26,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "full_name")
+    @Column(name = "full_name", nullable = false)
     @NotBlank(message = "Full name cannot be empty")
     @Size(max = 256)
     @NoHtml
     private String fullName;
 
-    @Column(name = "email", unique = true, updatable = false)
+    @Column(name = "email", unique = true, updatable = false, nullable = false)
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is not correct")
     @Size(max = 128)
     private String email;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
 

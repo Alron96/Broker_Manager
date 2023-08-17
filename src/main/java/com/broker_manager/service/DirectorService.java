@@ -1,6 +1,6 @@
 package com.broker_manager.service;
 
-import com.broker_manager.exception.NotFoundException;
+import com.broker_manager.util.error.NotFoundException;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Role;
 import com.broker_manager.repository.UserRepository;

@@ -30,4 +30,9 @@ public class BrokerController {
         return brokerService.getUserById(id);
     }
 
+    @PutMapping("/users/{id}")
+    @ResponseBody
+    public UserTo updateUser(@PathVariable Integer id) {
+        return brokerService.getUserById(id);
+    }
 }

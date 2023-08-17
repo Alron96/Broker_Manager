@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "stock_in_bank_account")
 @Getter
 @Setter
 @ToString
