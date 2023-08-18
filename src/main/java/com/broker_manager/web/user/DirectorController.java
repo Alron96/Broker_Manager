@@ -1,7 +1,6 @@
 package com.broker_manager.web.user;
 
 import com.broker_manager.model.User;
-import com.broker_manager.model.enums.Role;
 import com.broker_manager.service.DirectorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,13 @@ public class DirectorController {
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsersByRole(@RequestParam(name = "role") Role role) {
-        return directorService.getAllUsersByRole(role);
+    public List<User> getAllUsers() {
+        return directorService.getAllUsers();
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable Integer id) {
+        return directorService.getUser(id);
     }
 
     @PostMapping("/users")

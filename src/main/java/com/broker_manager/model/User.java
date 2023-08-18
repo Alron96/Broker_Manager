@@ -3,6 +3,7 @@ package com.broker_manager.model;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Role;
 import com.broker_manager.util.validation.NoHtml;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -62,6 +63,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "bank_account_id")
     )
     @ToString.Exclude
+    @JsonIgnore
     private List<BankAccount> bankAccounts;
 
     @Override

@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByDepartmentAndRole(Department department, Role broker);
 
+    Optional<User> findByDepartmentAndId(Department department, Integer id);
+
     List<User> findByRole(Role role);
 
     @Override

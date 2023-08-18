@@ -19,16 +19,18 @@ public class BrokerService {
         this.userRepository = userRepository;
     }
 
-    public UserTo getUserById(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User nof found with id=" + id));
-        return UserUtil.asTo(user);
+    public User getUserById(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User nof found with id=" + id));
+        return user;
     }
 
     @Transactional
-    public UserTo updateUser(UserTo userTo) {
-        User userFromDb = userRepository.findById(userTo.getId()).orElseThrow(() -> new NotFoundException("User nof found with id=" + userTo.getId()));
+    public User updateUser(UserTo userTo) {
+        User userFromDb = userRepository.findById(userTo.getId())
+                .orElseThrow(() -> new NotFoundException("User nof found with id=" + userTo.getId()));
         User user = UserUtil.updateFromTo(userFromDb, userTo);
         User updatedUser = userRepository.save(user);
-        return UserUtil.asTo(updatedUser);
+        return user;
     }
 }

@@ -15,55 +15,59 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class DirectorControllerTest extends AbstractControllerTest {
-    public static final String REST_URL = DirectorController.REST_URL + "/users";
-    public static final String REST_URL_SLASH = REST_URL + "/";
+public class ChiefBrokerControllerTest extends AbstractControllerTest {
+    public static final String REST_URL = ChiefBrokerController.REST_URL;
+    public static final String REST_URL_USERS = REST_URL + "/users";
+    public static final String REST_URL_SLASH = REST_URL_USERS + "/";
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
+    void getAllBrokersByDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + CHIEF_BROKER_ANALYTICAL.getDepartment().toString().toLowerCase()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(USERS));
+                .andExpect(USER_MATCHER.contentJson(ALL_BROKERS_BY_ANALYTICAL_DEPARTMENT));
     }
 
     @Test
-    void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + DIRECTOR_ID))
+    void getBrokerByDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + CHIEF_BROKER_ANALYTICAL.getDepartment().toString().toLowerCase() + "/" + BROKER_ANALYTICAL_ID_1))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(DIRECTOR));
+                .andExpect(USER_MATCHER.contentJson(BROKER_ANALYTICAL_1));
     }
 
     @Test
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + BROKER_CONSULTING_ID_2))
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + CHIEF_BROKER_ANALYTICAL.getDepartment().toString().toLowerCase() + "/" + BROKER_ANALYTICAL_ID_2)
+                .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertFalse(userRepository.findById(BROKER_CONSULTING_ID_2).isPresent());
+        assertFalse(userRepository.findById(BROKER_ANALYTICAL_ID_2).isPresent());
     }
 
     @Test
     void update() throws Exception {
-        User updated = getUpdatedConsultingBroker();
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + updated.getId())
+        User updated = getUpdatedAnalyticalBroker();
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + CHIEF_BROKER_ANALYTICAL.getDepartment().toString().toLowerCase() + "/" + updated.getId())
+                .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, updated.getPassword())))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(userRepository.findById(BROKER_CONSULTING_ID_1).orElse(null), getUpdatedConsultingBroker());
+        USER_MATCHER.assertMatch(userRepository.findById(BROKER_ANALYTICAL_ID_1).orElse(null), getUpdatedAnalyticalBroker());
     }
 
     @Test
     void create() throws Exception {
-        User newUser = getNewConsultingBroker();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        User newUser = getNewAnalyticalBroker();
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_USERS)
+                .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
                 .andDo(print())

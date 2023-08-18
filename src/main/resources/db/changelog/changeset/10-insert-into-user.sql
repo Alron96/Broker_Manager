@@ -1,5 +1,5 @@
 INSERT INTO `user` (`id`, `full_name`, `email`, `phone_number`, `password`, `department`, `role`)
-VALUES (1, 'Director Brokerov Pupkin"', 'director@mail.ru', '8-800-000-00-00',
+VALUES (1, 'Director Brokerov Pupkin', 'director@mail.ru', '8-800-000-00-00',
         'directorpassword', 0, 2),
        (2, 'Chief Analytical Pupkin', 'cheif_broker_analitycal@mail.ru', '8-800-111-11-11', 'chiefAnalyticalPassword',
         1, 1),

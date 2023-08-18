@@ -1,9 +1,8 @@
 package com.broker_manager.service;
 
-import com.broker_manager.util.error.NotFoundException;
 import com.broker_manager.model.User;
-import com.broker_manager.model.enums.Role;
 import com.broker_manager.repository.UserRepository;
+import com.broker_manager.util.error.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +17,12 @@ public class DirectorService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsersByRole(Role role) {
-        return userRepository.findByRole(role);
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUser(Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     public User createUser(User user) {
