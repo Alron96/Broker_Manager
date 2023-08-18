@@ -5,8 +5,6 @@ import com.broker_manager.to.UserTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/broker")
 public class BrokerController {
@@ -18,12 +16,6 @@ public class BrokerController {
         this.brokerService = brokerService;
     }
 
-    @GetMapping("/users")
-    @ResponseBody
-    public List<UserTo> getAllUsers() {
-        return brokerService.getAllUsers();
-    }
-
     @GetMapping("/users/{id}")
     @ResponseBody
     public UserTo getUserById(@PathVariable Integer id) {
@@ -32,7 +24,7 @@ public class BrokerController {
 
     @PutMapping("/users/{id}")
     @ResponseBody
-    public UserTo updateUser(@PathVariable Integer id) {
-        return brokerService.getUserById(id);
+    public UserTo updateUser(@PathVariable Integer id, @RequestBody UserTo userTo ) {
+        return brokerService.updateUser(userTo);
     }
 }
