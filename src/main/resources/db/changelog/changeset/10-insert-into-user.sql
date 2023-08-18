@@ -1,0 +1,15 @@
+INSERT INTO `user` (`id`, `full_name`, `email`, `phone_number`, `password`, `department`, `role`)
+VALUES (1, 'Director Brokerov Pupkin"', 'director@mail.ru', '8-800-000-00-00',
+        'directorpassword', 0, 2),
+       (2, 'Chief Analytical Pupkin', 'cheif_broker_analitycal@mail.ru', '8-800-111-11-11', 'chiefAnalyticalPassword',
+        1, 1),
+       (3, 'Chief Consulting Pupkin', 'cheif_broker_consulting@mail.ru', '8-800-111-11-22', 'chiefConsultingPassword',
+        2, 1),
+       (4, 'Broker Analytical First', 'broker_analitycal_1@mail.ru', '8-800-222-22-11', 'brokerAnalyticalFirstPassword',
+        1, 0),
+       (5, 'Broker Analytical Second', 'broker_analitycal_2@mail.ru', '8-800-222-22-22',
+        'brokerAnalyticalSecondPassword', 1, 0),
+       (6, 'Broker Consulting First', 'broker_consulting_1@mail.ru', '8-800-222-22-33', 'brokerConsultingFirstPassword',
+        2, 0),
+       (7, 'Broker Consulting Second', 'broker_consulting_2@mail.ru', '8-800-222-22-44',
+        'brokerConsultingSecondPassword', 2, 0)
