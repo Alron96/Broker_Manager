@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/01-create-table-user.sql
+  - include:
+      file: db/changelog/changeset/02-create-table-ticket.sql
+  - include:
+      file: db/changelog/changeset/03-create-table-bank-account.sql
+  - include:
+      file: db/changelog/changeset/04-create-table-user-bank-account.sql
+  - include:
+      file: db/changelog/changeset/05-create-table-stock.sql
+  - include:
+      file: db/changelog/changeset/07-create-table-stock-in-bank-account.sql
+  - include:
+      file: db/changelog/changeset/06-create-table-bank-account-transaction.sql
+  - include:
+      file: db/changelog/changeset/08-create-table-stock-in-ticket.sql
+  - include:
+      file: db/changelog/changeset/09-create-table-investor.sql
+  - include:
+      file: db/changelog/changeset/10-insert-into-user.sql

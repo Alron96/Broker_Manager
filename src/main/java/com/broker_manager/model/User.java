@@ -2,9 +2,12 @@ package com.broker_manager.model;
 
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Role;
+import com.broker_manager.util.validation.NoHtml;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -19,30 +22,37 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+    @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "full_name")
+    @Column(name = "full_name", nullable = false)
+    @NotBlank(message = "Full name cannot be empty")
+    @Size(max = 256)
+    @NoHtml
     private String fullName;
 
+    @Column(name = "email", unique = true, updatable = false, nullable = false)
     @NotBlank(message = "Email cannot be empty")
-    @Column(unique = true, updatable = false)
     @Email(message = "Email is not correct")
+    @Size(max = 128)
     private String email;
 
-    @NotBlank(message = "PhoneNumber cannot be empty")
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
+    @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
 
-    @Column(length = 1000)
+    @Column(name = "password", nullable = false)
     @NotBlank(message = "Password cannot be empty")
+    @Size(min = 6, max = 128)
     private String password;
 
+    @Column(name = "department", nullable = false)
     @Enumerated
     private Department department;
 
+    @Column(name = "role", nullable = false)
     @Enumerated
     private Role role;
 
@@ -53,26 +63,24 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "bank_account_id")
     )
     @ToString.Exclude
+    @JsonIgnore
     private List<BankAccount> bankAccounts;
-
-    @OneToMany(mappedBy = "user")
-    @ToString.Exclude
-    private List<Ticket> tickets;
-
-    @OneToMany(mappedBy = "user")
-    @ToString.Exclude
-    private List<BankAccountTransaction> bankAccountTransactions;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(fullName, user.fullName) && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(password, user.password) && Objects.equals(department, user.department) && Objects.equals(role, user.role) && Objects.equals(bankAccounts, user.bankAccounts) && Objects.equals(tickets, user.tickets) && Objects.equals(bankAccountTransactions, user.bankAccountTransactions);
+        return Objects.equals(id, user.id)
+                && Objects.equals(fullName, user.fullName)
+                && Objects.equals(email, user.email)
+                && Objects.equals(phoneNumber, user.phoneNumber)
+                && Objects.equals(department, user.department)
+                && Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, email, phoneNumber, password, department, role, bankAccounts, tickets, bankAccountTransactions);
+        return Objects.hash(id, fullName, email, phoneNumber, department, role);
     }
 }

@@ -15,29 +15,29 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankAccount {
+    @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "balance", nullable = false)
     private double balance;
 
+    @Column(name = "department", nullable = false)
     private Department department;
 
+    @Column(name = "type", nullable = false)
     @Enumerated
     private Type type;
 
-    @ManyToMany(mappedBy = "bankAccounts")
+    @ManyToMany(mappedBy = "bankAccounts",cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<User> users;
 
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<StockInBankAccount> stockInBankAccounts;
-
-    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<BankAccountTransaction> bankAccountTransactions;
 }
