@@ -3,6 +3,8 @@ package com.broker_manager.web.user;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Role;
 import com.broker_manager.service.DirectorService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,16 +27,19 @@ public class DirectorController {
     }
 
     @PostMapping("/users")
-    public User createUser(@RequestBody User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@Valid @RequestBody User user) {
         return directorService.createUser(user);
     }
 
     @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public User updateUser(@PathVariable Integer id, @Valid @RequestBody User updatedUser) {
         return directorService.updateUser(id, updatedUser);
     }
 
     @DeleteMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Integer id) {
         directorService.deleteUser(id);
     }

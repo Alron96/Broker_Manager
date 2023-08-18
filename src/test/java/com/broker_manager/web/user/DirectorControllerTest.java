@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.broker_manager.web.user.DirectorController.REST_URL;
 import static com.broker_manager.web.user.UserTestData.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -17,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class DirectorControllerTest extends AbstractControllerTest {
+    public static final String REST_URL = DirectorController.REST_URL + "/users";
     public static final String REST_URL_SLASH = REST_URL + "/";
 
     @Autowired

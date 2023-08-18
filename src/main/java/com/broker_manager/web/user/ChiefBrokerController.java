@@ -3,12 +3,13 @@ package com.broker_manager.web.user;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.service.ChiefBrokerService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/cheif_broker")
+@RequestMapping("/chief_broker")
 public class ChiefBrokerController {
 
     private final ChiefBrokerService chiefBrokerService;
@@ -23,12 +24,12 @@ public class ChiefBrokerController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         return chiefBrokerService.createUser(user);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
+    public User updateUser(@PathVariable Integer id, @Valid @RequestBody User updatedUser) {
         return chiefBrokerService.updateUser(id, updatedUser);
     }
 

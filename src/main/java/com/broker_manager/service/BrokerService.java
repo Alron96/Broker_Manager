@@ -1,12 +1,13 @@
 package com.broker_manager.service;
 
-import com.broker_manager.exception.NotFoundException;
+import com.broker_manager.model.User;
 import com.broker_manager.repository.UserRepository;
 import com.broker_manager.to.UserTo;
+import com.broker_manager.util.UserUtil;
+import com.broker_manager.util.error.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BrokerService {
@@ -19,15 +20,15 @@ public class BrokerService {
     }
 
     public UserTo getUserById(Integer id) {
-        return new UserTo();
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User nof found with id=" + id));
+        return UserUtil.asTo(user);
     }
 
-    public List<UserTo> getAllUsers() {
-        return List.of(new UserTo());
-    }
-
+    @Transactional
     public UserTo updateUser(UserTo userTo) {
-        return new UserTo();
+        User userFromDb = userRepository.findById(userTo.getId()).orElseThrow(() -> new NotFoundException("User nof found with id=" + userTo.getId()));
+        User user = UserUtil.updateFromTo(userFromDb, userTo);
+        User updatedUser = userRepository.save(user);
+        return UserUtil.asTo(updatedUser);
     }
-
 }
