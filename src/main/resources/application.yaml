@@ -14,11 +14,6 @@ spring:
   liquibase:
     enabled: true
 
-#  security:
-#    user:
-#      name: user
-#      password: 1
-
 logging:
   level:
     root: warn

@@ -33,13 +33,13 @@ public class User {
     @NoHtml
     private String fullName;
 
-    @Column(name = "email", unique = true, updatable = false, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is not correct")
     @Size(max = 128)
     private String email;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number", unique = true, nullable = false)
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
 

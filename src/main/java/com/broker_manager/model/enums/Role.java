@@ -1,7 +1,14 @@
 package com.broker_manager.model.enums;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
     BROKER,
     CHEIFBROKER,
-    DIRECTOR
+    DIRECTOR;
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_" + name();
+    }
 }

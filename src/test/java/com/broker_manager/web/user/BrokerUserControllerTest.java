@@ -6,6 +6,7 @@ import com.broker_manager.to.UserTo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.broker_manager.web.user.UserTestData.*;
@@ -13,14 +14,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class BrokerControllerTest extends AbstractControllerTest {
-    public static final String REST_URL = BrokerController.REST_URL;
+public class BrokerUserControllerTest extends AbstractControllerTest {
+    public static final String REST_URL = BrokerUserController.REST_URL;
     public static final String REST_URL_SLASH = REST_URL + "/";
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
+    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + BROKER_ANALYTICAL_ID_1))
                 .andExpect(status().isOk())
@@ -30,6 +32,30 @@ public class BrokerControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
+    void getForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
     void update() throws Exception {
         UserTo updated = getUpdatedAnalyticalBrokerTo();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + updated.getId())

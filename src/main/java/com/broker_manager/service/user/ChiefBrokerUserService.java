@@ -1,4 +1,4 @@
-package com.broker_manager.service;
+package com.broker_manager.service.user;
 
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ChiefBrokerService {
+public class ChiefBrokerUserService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public ChiefBrokerService(UserRepository userRepository) {
+    public ChiefBrokerUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

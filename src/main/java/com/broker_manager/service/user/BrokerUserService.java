@@ -1,4 +1,4 @@
-package com.broker_manager.service;
+package com.broker_manager.service.user;
 
 import com.broker_manager.model.User;
 import com.broker_manager.repository.UserRepository;
@@ -10,19 +10,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class BrokerService {
+public class BrokerUserService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public BrokerService(UserRepository userRepository) {
+    public BrokerUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     public User getUserById(Integer id) {
-        User user = userRepository.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User nof found with id=" + id));
-        return user;
     }
 
     @Transactional
@@ -30,7 +29,6 @@ public class BrokerService {
         User userFromDb = userRepository.findById(userTo.getId())
                 .orElseThrow(() -> new NotFoundException("User nof found with id=" + userTo.getId()));
         User user = UserUtil.updateFromTo(userFromDb, userTo);
-        User updatedUser = userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 }

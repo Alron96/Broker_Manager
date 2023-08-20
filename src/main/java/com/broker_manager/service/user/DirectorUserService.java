@@ -1,4 +1,4 @@
-package com.broker_manager.service;
+package com.broker_manager.service.user;
 
 import com.broker_manager.model.User;
 import com.broker_manager.repository.UserRepository;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DirectorService {
+public class DirectorUserService {
 
     private final UserRepository userRepository;
 
-    public DirectorService(UserRepository userRepository) {
+    public DirectorUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -22,7 +22,8 @@ public class DirectorService {
     }
 
     public User getUser(Integer id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public User createUser(User user) {

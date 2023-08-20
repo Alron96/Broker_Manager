@@ -33,7 +33,7 @@ public class BankAccount {
     @Enumerated
     private Type type;
 
-    @ManyToMany(mappedBy = "bankAccounts",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "bankAccounts", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<User> users;
 

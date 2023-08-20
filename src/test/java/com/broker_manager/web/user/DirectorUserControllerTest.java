@@ -6,6 +6,7 @@ import com.broker_manager.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -15,14 +16,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class DirectorControllerTest extends AbstractControllerTest {
-    public static final String REST_URL = DirectorController.REST_URL + "/users";
+class DirectorUserControllerTest extends AbstractControllerTest {
+    public static final String REST_URL = DirectorUserController.REST_URL;
     public static final String REST_URL_SLASH = REST_URL + "/";
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
@@ -32,6 +34,7 @@ class DirectorControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + DIRECTOR_ID))
                 .andExpect(status().isOk())
@@ -41,6 +44,30 @@ class DirectorControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
+    void getForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + BROKER_CONSULTING_ID_2))
                 .andDo(print())
@@ -49,6 +76,15 @@ class DirectorControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
     void update() throws Exception {
         User updated = getUpdatedConsultingBroker();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + updated.getId())
@@ -61,6 +97,31 @@ class DirectorControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
+    void updateInvalid() throws Exception {
+        User invalid = getUpdatedConsultingBroker();
+        invalid.setFullName("");
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + BROKER_CONSULTING_ID_1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(invalid, invalid.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
+    void updateHtmlUnsafe() throws Exception {
+        User invalid = getUpdatedConsultingBroker();
+        invalid.setFullName("<script>alert(123)</script>");
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + BROKER_CONSULTING_ID_1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(invalid, invalid.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
     void create() throws Exception {
         User newUser = getNewConsultingBroker();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -74,5 +135,17 @@ class DirectorControllerTest extends AbstractControllerTest {
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(userRepository.findById(newId).orElse(null), newUser);
+    }
+
+    @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
+    void createInvalid() throws Exception {
+        User invalid = getUpdatedConsultingBroker();
+        invalid.setFullName("");
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(invalid, invalid.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }
