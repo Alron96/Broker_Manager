@@ -2,6 +2,7 @@ package com.broker_manager.web.ticket;
 
 import com.broker_manager.model.StockInTicket;
 import com.broker_manager.model.Ticket;
+import com.broker_manager.to.TicketTo;
 import com.broker_manager.web.AuthorizedUser;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,11 @@ public class ChiefBrokerTicketController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Ticket createTicket(@PathVariable String department, @Valid @RequestBody Ticket ticket,
-                               @Valid @RequestBody List<StockInTicket> stocksInTicket, @AuthenticationPrincipal AuthorizedUser authUser) {
+    public Ticket createTicket(@PathVariable String department, @Valid @RequestBody TicketTo ticketTo,
+                               @AuthenticationPrincipal AuthorizedUser authUser) {
         // Создать Ticket с stockInTicket
+        // В сервисе сделать преобразование из TicketTo в Ticket и сохранить в БД
+        // Недостающие данные при конвертации из TicketTO в Ticket заполнить значениями по умолчанию
         return null;
     }
 

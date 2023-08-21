@@ -1,8 +1,13 @@
-package com.broker_manager.web.user;
+package com.broker_manager.web.ticket;
 
 import com.broker_manager.AbstractControllerTest;
+import com.broker_manager.model.Ticket;
 import com.broker_manager.model.User;
+import com.broker_manager.repository.TicketRepository;
 import com.broker_manager.repository.UserRepository;
+import com.broker_manager.to.TicketTo;
+import com.broker_manager.util.JsonUtil;
+import com.broker_manager.util.TicketUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,38 +15,41 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.broker_manager.web.ticket.TicketTestData.*;
 import static com.broker_manager.web.user.UserTestData.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ChiefBrokerUserControllerTest extends AbstractControllerTest {
-    public static final String REST_URL = "/chief_broker/users/"
+class ChiefBrokerTicketControllerTest extends AbstractControllerTest {
+    public static final String REST_URL = "/chief_broker/tickets/"
             + CHIEF_BROKER_ANALYTICAL.getDepartment().toString().toLowerCase();
     public static final String REST_URL_SLASH = REST_URL + "/";
 
     @Autowired
-    private UserRepository userRepository;
+    TicketRepository ticketRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
-    void getAllBrokersByDepartment() throws Exception {
+    void getAllTicketByDepartment() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(ALL_BROKERS_BY_ANALYTICAL_DEPARTMENT));
+                .andExpect(TICKET_MATCHER_WITHOUT_STOCKS.contentJson(TICKETS_FOR_DEPARTMENT_ANALYTICAL));
     }
 
     @Test
     @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
-    void getBrokerByDepartment() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + BROKER_ANALYTICAL_ID_1))
+    void getTicketByDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + TICKET_ID_3))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(BROKER_ANALYTICAL_1));
+                .andExpect(TICKET_MATCHER.contentJson(TICKET_ANALYTICAL_3));
     }
 
     @Test
@@ -70,11 +78,11 @@ class ChiefBrokerUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + "/" + BROKER_ANALYTICAL_ID_2)
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + TICKET_ID_4)
                 .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertFalse(userRepository.findById(BROKER_ANALYTICAL_ID_2).isPresent());
+        assertFalse(ticketRepository.findById(TICKET_ID_4).isPresent());
     }
 
     @Test
@@ -87,58 +95,20 @@ class ChiefBrokerUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
-    void update() throws Exception {
-        User updated = getUpdatedAnalyticalBroker();
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "/" + updated.getId())
-                .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(updated, updated.getPassword())))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-
-        USER_MATCHER.assertMatch(userRepository.findById(BROKER_ANALYTICAL_ID_1).orElse(null), getUpdatedAnalyticalBroker());
-    }
-
-    @Test
-    @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
-    void updateInvalid() throws Exception {
-        User invalid = getUpdatedConsultingBroker();
-        invalid.setFullName("");
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + BROKER_CONSULTING_ID_1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(invalid, invalid.getPassword())))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
-    void updateHtmlUnsafe() throws Exception {
-        User invalid = getUpdatedConsultingBroker();
-        invalid.setFullName("<script>alert(123)</script>");
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + BROKER_CONSULTING_ID_1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(invalid, invalid.getPassword())))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
     void create() throws Exception {
-        User newUser = getNewAnalyticalBroker();
+        TicketTo newTicketTo = getNewAnalyticalTicketTo();
+        Ticket newTicket = TicketUtil.createNewFromTo(newTicketTo, userRepository.getReferenceById(newTicketTo.getBrokerId()), CHIEF_BROKER_ANALYTICAL);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
-                .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(newUser, newUser.getPassword())))
+                .content(JsonUtil.writeValue(newTicketTo)))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        User created = USER_MATCHER.readFromJson(action);
+        Ticket created = TICKET_MATCHER.readFromJson(action);
         int newId = created.getId();
-        newUser.setId(newId);
-        USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(userRepository.findById(newId).orElse(null), newUser);
+        newTicket.setId(newId);
+        TICKET_MATCHER.assertMatch(created, newTicket);
+        TICKET_MATCHER.assertMatch(ticketRepository.findById(newId).orElse(null), newTicket);
     }
 
     @Test

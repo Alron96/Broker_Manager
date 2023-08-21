@@ -12,7 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserTo {
-
     private Integer id;
 
     @NotBlank(message = "Full name cannot be empty")

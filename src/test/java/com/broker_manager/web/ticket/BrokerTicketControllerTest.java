@@ -1,34 +1,40 @@
-package com.broker_manager.web.user;
+package com.broker_manager.web.ticket;
 
 import com.broker_manager.AbstractControllerTest;
-import com.broker_manager.repository.UserRepository;
-import com.broker_manager.to.UserTo;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.broker_manager.web.ticket.TicketTestData.*;
 import static com.broker_manager.web.user.UserTestData.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class BrokerUserControllerTest extends AbstractControllerTest {
-    public static final String REST_URL = BrokerUserController.REST_URL;
+class BrokerTicketControllerTest extends AbstractControllerTest {
+    public static final String REST_URL = "/broker/tickets/"
+            + BROKER_ANALYTICAL_1.getDepartment().toString().toLowerCase();
     public static final String REST_URL_SLASH = REST_URL + "/";
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
-    void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + BROKER_ANALYTICAL_ID_1))
+    void getAllTicketByUser() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(BROKER_ANALYTICAL_1));
+                .andExpect(TICKET_MATCHER_WITHOUT_STOCKS.contentJson(TICKETS_FOR_BROKER_ANALYTICAL));
+    }
+
+    @Test
+    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
+    void getTicketByDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + TICKET_ID_1))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TICKET_MATCHER.contentJson(TICKET_ANALYTICAL_1));
     }
 
     @Test
@@ -52,18 +58,5 @@ class BrokerUserControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andDo(print())
                 .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
-    void update() throws Exception {
-        UserTo updated = getUpdatedAnalyticalBrokerTo();
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + updated.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(updated, updated.getPassword())))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-
-        USER_MATCHER.assertMatch(userRepository.findById(BROKER_ANALYTICAL_ID_1).orElse(null), getUpdatedAnalyticalBroker());
     }
 }
