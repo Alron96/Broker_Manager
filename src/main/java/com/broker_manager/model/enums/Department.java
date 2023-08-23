@@ -4,5 +4,7 @@ public enum Department {
     COMPANY,
     ANALYTICAL,
     CONSULTING,
-    EXCHANGE
+    EXCHANGE;
+
+
 }

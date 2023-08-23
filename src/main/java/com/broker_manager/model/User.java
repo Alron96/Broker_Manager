@@ -68,6 +68,9 @@ public class User {
     @JsonIgnore
     private List<BankAccount> bankAccounts;
 
+    public <E> User(Object o, String fullName, String toLowerCase, String phoneNumber, String password, Department department, Role role, List<E> bankAccounts) {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,4 +88,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, fullName, email, phoneNumber, department, role);
     }
+
 }
