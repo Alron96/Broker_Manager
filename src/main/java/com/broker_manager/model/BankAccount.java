@@ -40,4 +40,9 @@ public class BankAccount {
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<StockInBankAccount> stockInBankAccounts;
+
+    @Transient
+    private StockInBankAccount stockInBankAccount;
+
+    public boolean hasStockInBankAccount;
 }
