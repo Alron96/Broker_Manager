@@ -1,7 +1,10 @@
 package com.broker_manager.model;
 
 import com.broker_manager.model.enums.Operation;
+import com.broker_manager.web.AuthorizedUser;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -50,4 +53,29 @@ public class BankAccountTransaction extends BankAccount {
     @ManyToOne
     @JoinColumn(name = "stock_id")
     private Stock stock;
+
+    @Transient
+    @NotNull
+    private BankAccount senderBankAccount;
+
+    @NotNull
+    @Transient
+    private BankAccount recipientBankAccount;
+
+    @NotNull
+    @Transient
+    private Double amount;
+
+    @Transient
+    private LocalDateTime executionDate;
+
+    public LocalDateTime getExecutionDate() {
+        return executionDate;
+    }
+
+    @Transient
+    private AuthorizedUser authUser;
+    public AuthorizedUser getAuthUser() {
+        return authUser;
+    }
 }
