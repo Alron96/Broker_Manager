@@ -1,8 +1,10 @@
 package com.broker_manager.web.user;
 
 import com.broker_manager.AbstractControllerTest;
+import com.broker_manager.model.User;
 import com.broker_manager.repository.UserRepository;
 import com.broker_manager.to.UserTo;
+import com.broker_manager.util.UserUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class BrokerUserControllerTest extends AbstractControllerTest {
     public static final String REST_URL = BrokerUserController.REST_URL;
-    public static final String REST_URL_SLASH = REST_URL + "/";
 
     @Autowired
     private UserRepository userRepository;
@@ -24,19 +25,11 @@ class BrokerUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + BROKER_ANALYTICAL_ID_1))
+        perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHER.contentJson(BROKER_ANALYTICAL_1));
-    }
-
-    @Test
-    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
-    void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + NOT_FOUND))
-                .andDo(print())
-                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -57,13 +50,27 @@ class BrokerUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
     void update() throws Exception {
-        UserTo updated = getUpdatedAnalyticalBrokerTo();
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + updated.getId())
+        User updated = getUpdatedAnalyticalBroker();
+        UserTo updatedTo = UserUtil.asTo(updated);
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(updated, updated.getPassword())))
+                .content(jsonWithPassword(updatedTo, updatedTo.getPassword())))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
         USER_MATCHER.assertMatch(userRepository.findById(BROKER_ANALYTICAL_ID_1).orElse(null), getUpdatedAnalyticalBroker());
+    }
+
+    @Test
+    @WithUserDetails(value = BROKER_ANALYTICAL_1_MAIL)
+    void updateInvalid() throws Exception {
+        User updated = getUpdatedAnalyticalBroker();
+        UserTo updatedTo = UserUtil.asTo(updated);
+        updatedTo.setFullName("");
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(updatedTo, updatedTo.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

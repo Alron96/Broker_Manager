@@ -52,12 +52,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/director/**").hasRole(Role.DIRECTOR.name())
                         .requestMatchers("/chief_broker/**").hasRole(Role.CHEIFBROKER.name())
                         .requestMatchers("/broker/**").hasRole(Role.BROKER.name())
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))

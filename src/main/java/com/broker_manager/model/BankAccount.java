@@ -27,6 +27,7 @@ public class BankAccount {
     private double balance;
 
     @Column(name = "department", nullable = false)
+    @Enumerated
     private Department department;
 
     @Column(name = "type", nullable = false)
