@@ -45,4 +45,11 @@ public class BankAccount {
     private StockInBankAccount stockInBankAccount;
 
     public boolean hasStockInBankAccount;
+
+    @Transient
+    private static BankAccount dummyBankAccount;
+
+    public static BankAccount getDummyBankAccount() {
+        return dummyBankAccount;
+    }
 }

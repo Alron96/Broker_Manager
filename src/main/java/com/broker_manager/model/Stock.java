@@ -33,6 +33,9 @@ public class Stock {
     @NotBlank(message = "Sell price cannot be empty")
     private double priceSell;
 
+    @Transient
+    private BankAccount bankAccount;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,4 +49,6 @@ public class Stock {
     public int hashCode() {
         return Objects.hash(id, companyName);
     }
+
+
 }

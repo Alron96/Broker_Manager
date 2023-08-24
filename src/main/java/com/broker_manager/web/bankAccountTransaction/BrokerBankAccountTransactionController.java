@@ -3,6 +3,7 @@ package com.broker_manager.web.bankAccountTransaction;
 import com.broker_manager.model.BankAccountTransaction;
 import com.broker_manager.model.Stock;
 import com.broker_manager.model.enums.Operation;
+import com.broker_manager.service.bankAccountTransaction.BrokerBankAccountTransactionService;
 import com.broker_manager.web.AuthorizedUser;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,16 +18,23 @@ import java.util.List;
 public class BrokerBankAccountTransactionController {
     static final String REST_URL = "/broker/transactions";
 
+    private final BrokerBankAccountTransactionService bankAccountTransactionService;
+
+    public BrokerBankAccountTransactionController(BrokerBankAccountTransactionService bankAccountTransactionService) {
+        this.bankAccountTransactionService = bankAccountTransactionService;
+    }
+
+
     @GetMapping
     public List<BankAccountTransaction> getAllBankAccountTransactionsByUser(@AuthenticationPrincipal AuthorizedUser authUser) {
         // Вывести список BankAccountTransaction сортированный по дате исполнение от новых к старым, которые совершал данный User
-        return null;
+        return bankAccountTransactionService.getAllBankAccountTransactionsByUser(authUser);
     }
 
     @GetMapping("/{id}")
     public BankAccountTransaction getBankAccountTransaction(@PathVariable Integer id) {
         // Вывести BankAccountTransaction
-        return null;
+        return bankAccountTransactionService.getBankAccountTransaction(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -37,6 +45,6 @@ public class BrokerBankAccountTransactionController {
         // sender_bank_account - это BankAccount отдела
         // recipient_bank_account - это BankAccount биржи (он будет создан в качестве заглушки и для всех един)
         // Если покупка, то нужно также приписать StockInBankAccount к данному счету. Если продажа, то соответственно, удалить
-        return null;
+        return bankAccountTransactionService.createBankAccountTransaction(stock, amount, operation, authUser);
     }
 }

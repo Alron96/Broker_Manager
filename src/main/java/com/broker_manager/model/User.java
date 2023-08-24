@@ -83,4 +83,7 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, fullName, email, phoneNumber, department, role);
     }
+
+    @Transient
+    private BankAccount bankAccount;
 }
