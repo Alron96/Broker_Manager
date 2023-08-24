@@ -3,11 +3,9 @@ package com.broker_manager.web.user;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.service.user.ChiefBrokerUserService;
-import com.broker_manager.web.AuthorizedUser;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

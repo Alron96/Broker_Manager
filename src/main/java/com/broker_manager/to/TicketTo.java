@@ -1,9 +1,8 @@
 package com.broker_manager.to;
 
 import com.broker_manager.model.StockInTicket;
-import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Operation;
-import jakarta.persistence.*;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.util.List;

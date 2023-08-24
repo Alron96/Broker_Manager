@@ -11,10 +11,19 @@ import java.time.LocalDateTime;
 public class TicketUtil {
 
     public static Ticket createNewFromTo(TicketTo ticketTo, User broker, User chiefBroker) {
-        return new Ticket(null, ticketTo.getOperation(), false, LocalDateTime.now(), null, broker, chiefBroker, ticketTo.getTicketStocks());
+        return new Ticket(null, ticketTo.getOperation(),
+                false,
+                LocalDateTime.now(),
+                null,
+                broker,
+                chiefBroker,
+                ticketTo.getTicketStocks());
     }
 
     public static TicketTo asTo(Ticket ticket) {
-        return new TicketTo(ticket.getId(), ticket.getOperation(), ticket.getBroker().getId(), ticket.getTicketStocks());
+        return new TicketTo(ticket.getId(),
+                ticket.getOperation(),
+                ticket.getBroker().getId(),
+                ticket.getTicketStocks());
     }
 }

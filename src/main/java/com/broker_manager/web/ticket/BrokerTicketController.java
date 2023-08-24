@@ -1,7 +1,7 @@
 package com.broker_manager.web.ticket;
 
 import com.broker_manager.model.Ticket;
-import com.broker_manager.model.User;
+import com.broker_manager.service.ticket.BrokerTicketServiceImpl;
 import com.broker_manager.web.AuthorizedUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,16 +15,22 @@ import java.util.List;
 @RequestMapping(BrokerTicketController.REST_URL)
 public class BrokerTicketController {
     static final String REST_URL = "/broker/tickets/{department}";
+    private final BrokerTicketServiceImpl brokerTicketService;
+
+    public BrokerTicketController(BrokerTicketServiceImpl brokerTicketService) {
+        this.brokerTicketService = brokerTicketService;
+    }
 
     @GetMapping
-    public List<Ticket> getAllTicketByUser(@PathVariable String department) {
+    public List<Ticket> getAllTicketByUser(@PathVariable String department, @AuthenticationPrincipal AuthorizedUser authUser) {
         // Вывести список Ticket без stockInTicket данного User
-        return null;
+
+        return brokerTicketService.getAllTicketByUser(department, authUser.getUser());
     }
 
     @GetMapping("/{id}")
     public Ticket getTicketByDepartment(@PathVariable String department, @PathVariable Integer id, @AuthenticationPrincipal AuthorizedUser authUser) {
         // Вывести Ticket с stockInTicket
-        return null;
+        return brokerTicketService.getTicketByDepartment(department, id, authUser);
     }
 }
