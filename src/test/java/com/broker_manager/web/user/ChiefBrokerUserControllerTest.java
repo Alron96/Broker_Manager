@@ -35,6 +35,14 @@ class ChiefBrokerUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = CHIEF_BROKER_CONSULTING_MAIL)
+    void getAllBrokersByWrongDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
     void getBrokerByDepartment() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + BROKER_ANALYTICAL_ID_1))
@@ -42,6 +50,14 @@ class ChiefBrokerUserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHER.contentJson(BROKER_ANALYTICAL_1));
+    }
+
+    @Test
+    @WithUserDetails(value = CHIEF_BROKER_CONSULTING_MAIL)
+    void getBrokerByWrongDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + BROKER_ANALYTICAL_ID_1))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -78,6 +94,15 @@ class ChiefBrokerUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = CHIEF_BROKER_CONSULTING_MAIL)
+    void deleteByWrongDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + "/" + BROKER_ANALYTICAL_ID_2)
+                .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
@@ -89,7 +114,7 @@ class ChiefBrokerUserControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = CHIEF_BROKER_ANALYTICAL_MAIL)
     void update() throws Exception {
         User updated = getUpdatedAnalyticalBroker();
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "/" + updated.getId())
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + updated.getId())
                 .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, updated.getPassword())))
@@ -139,6 +164,18 @@ class ChiefBrokerUserControllerTest extends AbstractControllerTest {
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(userRepository.findById(newId).orElse(null), newUser);
+    }
+
+    @Test
+    @WithUserDetails(value = CHIEF_BROKER_CONSULTING_MAIL)
+    void createByWrongDepartment() throws Exception {
+        User newUser = getNewAnalyticalBroker();
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .param("chiefId", String.valueOf(CHIEF_BROKER_ANALYTICAL_ID))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(newUser, newUser.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

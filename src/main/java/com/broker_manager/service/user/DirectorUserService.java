@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class DirectorUserService {
+import static com.broker_manager.util.UserUtil.checkNew;
 
-    private final UserRepository userRepository;
+@Service
+public class DirectorUserService extends AbstractUserService {
 
     public DirectorUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+        super(userRepository);
     }
 
     public List<User> getAllUsers() {
@@ -27,21 +27,14 @@ public class DirectorUserService {
     }
 
     public User createUser(User user) {
-        return userRepository.save(user);
+        checkNew(user);
+        return prepareAndSave(user);
     }
 
     @Transactional
     public User updateUser(Integer id, User updatedUser) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-        existingUser.setFullName(updatedUser.getFullName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        existingUser.setPassword(updatedUser.getPassword());
-        existingUser.setDepartment(updatedUser.getDepartment());
-        existingUser.setRole(updatedUser.getRole());
-
-        return userRepository.save(existingUser);
+        updatedUser.setId(id);
+        return prepareAndSave(updatedUser);
     }
 
     @Transactional

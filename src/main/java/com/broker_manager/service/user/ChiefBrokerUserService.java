@@ -6,70 +6,75 @@ import com.broker_manager.model.enums.Role;
 import com.broker_manager.repository.UserRepository;
 import com.broker_manager.util.error.NotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.broker_manager.util.UserUtil.checkNew;
+
 @Service
-public class ChiefBrokerUserService {
+public class ChiefBrokerUserService extends AbstractUserService {
 
-    private final UserRepository userRepository;
-
-    @Autowired
     public ChiefBrokerUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+        super(userRepository);
     }
 
-    public List<User> getAllBrokersByDepartment(Department department) {
-        return userRepository.findByDepartmentAndRole(department, Role.BROKER);
+    public List<User> getAllBrokersByDepartment(String department, User chiefUser) {
+        Department checkingDepartment = checkDepartment(department);
+        checkChiefBrokerByDepartment(checkingDepartment, chiefUser);
+        return userRepository.findByDepartmentAndRole(checkingDepartment, Role.BROKER);
     }
 
-    public User getBrokerByDepartment(Department department, Integer id) {
-        return userRepository.findByDepartmentAndId(department, id)
-                .orElseThrow(() -> new NotFoundException("Broker not found"));
+    public User getBrokerByDepartment(String department, Integer id, User chiefUser) {
+        Department checkingDepartment = checkDepartment(department);
+        checkChiefBrokerByDepartment(checkingDepartment, chiefUser);
+        return userRepository.findByDepartmentAndId(checkingDepartment, id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    public User createUser(User user, Integer chiefId) {
-        checkChiefBrokerByRoleAndDepartment(user, chiefId);
-        return userRepository.save(user);
+    public User createUser(User user, User chiefUser) {
+        checkNew(user);
+        checkChiefBrokerByDepartmentAndUserByRole(user, chiefUser);
+        return prepareAndSave(user);
     }
 
     @Transactional
-    public User updateUser(Integer id, User updatedUser, Integer chiefId) {
+    public User updateUser(Integer id, User updatedUser, User chiefUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        checkChiefBrokerByRoleAndDepartment(existingUser, chiefId);
 
-        existingUser.setFullName(updatedUser.getFullName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        existingUser.setPassword(updatedUser.getPassword());
-        existingUser.setRole(updatedUser.getRole());
-
-        return userRepository.save(existingUser);
+        checkChiefBrokerByDepartmentAndUserByRole(existingUser, chiefUser);
+        return prepareAndSave(updatedUser);
     }
 
     @Transactional
-    public void deleteUser(Integer id, Integer chiefId) {
+    public void deleteUser(Integer id, User chiefUser) {
         User firedUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("The user you want to fire does not exist"));
 
-        checkChiefBrokerByRoleAndDepartment(firedUser, chiefId);
-
+        checkChiefBrokerByDepartmentAndUserByRole(firedUser, chiefUser);
         userRepository.delete(firedUser);
     }
 
-    private void checkChiefBrokerByRoleAndDepartment(User user, Integer chiefId) {
-        User chiefUser = userRepository.findById(chiefId)
-                .orElseThrow(() -> new NotFoundException("ChiefBroker not found"));
-
-        if (chiefUser.getRole() == Role.BROKER) {
-            throw new IllegalArgumentException("Only director or chief can create, update or delete");
+    public static Department checkDepartment(String department) {
+        try {
+            return Department.valueOf(department.toUpperCase());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Department does not exist");
         }
-        if (!chiefUser.getDepartment().equals(user.getDepartment())) {
-            throw new IllegalArgumentException("User belongs to a different department and cannot be created, updated or deleted");
+    }
+
+    public static void checkChiefBrokerByDepartment(Department userDepartment, User chiefUser) {
+        if (!chiefUser.getDepartment().equals(userDepartment)) {
+            throw new IllegalArgumentException("User belong to a different department and cannot be created, updated or deleted");
+        }
+    }
+
+    public static void checkChiefBrokerByDepartmentAndUserByRole(User user, User chiefUser) {
+        checkChiefBrokerByDepartment(user.getDepartment(), chiefUser);
+        if (user.getRole() != Role.BROKER) {
+            throw new IllegalArgumentException("Chief broker can create only brokers");
         }
     }
 }

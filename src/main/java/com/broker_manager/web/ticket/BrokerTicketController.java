@@ -21,6 +21,7 @@ public class BrokerTicketController {
         this.brokerTicketService = brokerTicketService;
     }
 
+
     @GetMapping
     public List<Ticket> getAllTicketByUser(@PathVariable String department, @AuthenticationPrincipal AuthorizedUser authUser) {
         // Вывести список Ticket без stockInTicket данного User

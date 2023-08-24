@@ -1,7 +1,7 @@
 package com.broker_manager.web.ticket;
 
-import com.broker_manager.model.StockInTicket;
 import com.broker_manager.model.Ticket;
+import com.broker_manager.service.ticket.ChiefBrokerTicketServiceImpl;
 import com.broker_manager.to.TicketTo;
 import com.broker_manager.web.AuthorizedUser;
 import jakarta.validation.Valid;
@@ -16,17 +16,25 @@ import java.util.List;
 @RequestMapping(ChiefBrokerTicketController.REST_URL)
 public class ChiefBrokerTicketController {
     static final String REST_URL = "/chief_broker/tickets/{department}";
+    private final ChiefBrokerTicketServiceImpl chiefBrokerTicketService;
+
+    public ChiefBrokerTicketController(ChiefBrokerTicketServiceImpl chiefBrokerTicketService) {
+        this.chiefBrokerTicketService = chiefBrokerTicketService;
+    }
 
     @GetMapping
-    public List<Ticket> getAllTicketByDepartment(@PathVariable String department) {
+    public List<Ticket> getAllTicketByDepartment(@PathVariable String department, @AuthenticationPrincipal AuthorizedUser authUser) {
         // Вывести список Ticket без stockInTicket данного Department
+//        return chiefBrokerTicketService.getAllTicketByDepartment(department, authUser.getUser());
         return null;
     }
 
     @GetMapping("/{id}")
     public Ticket getTicketByDepartment(@PathVariable String department, @PathVariable Integer id, @AuthenticationPrincipal AuthorizedUser authUser) {
-        // Вывести Ticket с stockInTicket и BankAccountTransaction
+//         Вывести Ticket с stockInTicket и BankAccountTransaction
+//        return chiefBrokerTicketService.getTicketByDepartment(department,id,authUser.getUser());
         return null;
+
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

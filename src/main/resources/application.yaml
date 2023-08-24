@@ -17,6 +17,7 @@ spring:
   liquibase:
     enabled: true
 
+
 logging:
   level:
     root: warn

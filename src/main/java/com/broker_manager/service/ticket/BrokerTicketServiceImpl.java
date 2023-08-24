@@ -14,7 +14,6 @@ import java.util.List;
 public class BrokerTicketServiceImpl implements BrokerTicketService {
     private final TicketRepository ticketRepository;
 
-
     @Autowired
     public BrokerTicketServiceImpl(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
@@ -23,13 +22,12 @@ public class BrokerTicketServiceImpl implements BrokerTicketService {
     @Override
     public List<Ticket> getAllTicketByUser(String department, User user) {
         Department departmentUpperCase = Department.valueOf(department.toUpperCase());
-        return ticketRepository.getAllTicketByDepartmentExcludeStockInTicket(departmentUpperCase);
+        return ticketRepository.getAllTicketByUserExcludeStockInTicket(departmentUpperCase, user.getId());
     }
 
     @Override
     public Ticket getTicketByDepartment(String department, Integer id, AuthorizedUser authUser) {
         Department departmentUpperCase = Department.valueOf(department.toUpperCase());
-
-        return ticketRepository.getAllTicketByDepartment(departmentUpperCase, id, authUser);
+        return ticketRepository.getTicketByDepartment(departmentUpperCase, id);
     }
 }
