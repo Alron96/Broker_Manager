@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StockInBankAccountRepository extends JpaRepository<StockInBankAccount, Integer> {
     StockInBankAccount findByStockAndBankAccount(Stock stock, BankAccount senderAccount);
 
-    List<StockInBankAccount> findByBankAccount(BankAccount bankAccount);
+    Optional<StockInBankAccount> findByBankAccount(BankAccount bankAccount);
 }

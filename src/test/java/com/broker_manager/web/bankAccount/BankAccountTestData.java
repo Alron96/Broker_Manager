@@ -11,8 +11,8 @@ import static com.broker_manager.web.stockInBankAccount.StockInBankAccountTestDa
 import static com.broker_manager.web.user.UserTestData.*;
 
 public class BankAccountTestData {
-    public static final MatcherFactory.Matcher<BankAccount> BANK_ACCOUNT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class);
-    public static final MatcherFactory.Matcher<BankAccount> BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS = MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class, "stockInBankAccount");
+    public static final MatcherFactory.Matcher<BankAccount> BANK_ACCOUNT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class, "users.password");
+    public static final MatcherFactory.Matcher<BankAccount> BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS = MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class, "stockInBankAccounts");
 
     public static final int BANK_ACCOUNT_COMPANY_ID = 1;
     public static final int BANK_ACCOUNT_CONSULTING_ID = 2;

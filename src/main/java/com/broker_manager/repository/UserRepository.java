@@ -19,5 +19,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
     Optional<User> findByEmailIgnoreCase(String email);
+
+    @Query("SELECT u FROM User u JOIN FETCH u.bankAccounts b WHERE b.id=:id")
+    List<User> findByBankAccounts(Integer id);
 }
 

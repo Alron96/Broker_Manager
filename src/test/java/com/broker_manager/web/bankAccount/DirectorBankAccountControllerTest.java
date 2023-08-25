@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class DirectorBankAccountControllerTest extends AbstractControllerTest {
-    static final String REST_URL = "/director/bankAccounts";
+    static final String REST_URL = DirectorBankAccountController.REST_URL;
 
     @Autowired
     private BankAccountRepository bankAccountRepository;

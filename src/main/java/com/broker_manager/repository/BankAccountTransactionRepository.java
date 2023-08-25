@@ -12,17 +12,5 @@ import java.util.List;
 
 @Repository
 public interface BankAccountTransactionRepository extends JpaRepository<BankAccountTransaction, Integer> {
-    List<BankAccountTransaction> findAllByUserOrderByExecutionDateDesc(User user);
-
-    List<BankAccountTransaction> findByDepartmentOrderByExecutionDateDesc(Department department);
-
-    Object findByBankAccount(BankAccount bankAccount);
-
-    BankAccount findByUserAndPriceBuyDesc(Stock stock);
-
-    BankAccount findByUserAndPriceSellDesc(Stock stock);
-    BankAccount findAllByUserOrderByPriceBuyDesc(Stock stock);
-
-    BankAccount findAllByUserOrderByPriceSellDesc(Stock stock);
 
 }

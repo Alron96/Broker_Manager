@@ -36,7 +36,7 @@ public class DirectorBankAccountController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public BankAccount createBankAccount(@Valid @RequestBody BankAccount bankAccount) {
+    public BankAccount createBankAccount(@Valid @RequestBody BankAccount bankAccount, @RequestParam(required = false) Integer userId) {
         // Создать новый BankAccount
         // Проверка, что у отдела или у юзера не может быть больше 1 счета
         return directorBankAccountService.createBankAccount(bankAccount);
