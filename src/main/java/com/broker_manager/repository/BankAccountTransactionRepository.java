@@ -21,4 +21,8 @@ public interface BankAccountTransactionRepository extends JpaRepository<BankAcco
     BankAccount findByUserAndPriceBuyDesc(Stock stock);
 
     BankAccount findByUserAndPriceSellDesc(Stock stock);
+    BankAccount findAllByUserOrderByPriceBuyDesc(Stock stock);
+
+    BankAccount findAllByUserOrderByPriceSellDesc(Stock stock);
+
 }

@@ -148,4 +148,15 @@ class DirectorUserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
+
+    @Test
+    @WithUserDetails(value = DIRECTOR_MAIL)
+    void createValidButWithIdNotNull() throws Exception {
+        User invalid = getUpdatedConsultingBroker();
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(invalid, invalid.getPassword())))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
 }

@@ -43,6 +43,7 @@ public class BrokerBankAccountTransactionService {
             recipientBankAccount = determineRecipientBankAccountForBuy(stock);
             bankAccountTransaction.setRecipientBankAccountId(recipientBankAccount);
         } else if (operation == Operation.SELL) {
+
             recipientBankAccount = determineRecipientBankAccountForSell(stock);
             bankAccountTransaction.setRecipientBankAccountId(recipientBankAccount);
         }

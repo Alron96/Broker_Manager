@@ -5,6 +5,7 @@ import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Role;
 import com.broker_manager.to.UserTo;
+import com.broker_manager.util.error.IllegalRequestDataException;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -27,5 +28,11 @@ public class UserUtil {
 
     public static UserTo asTo(User user) {
         return new UserTo(user.getId(), user.getFullName(), user.getEmail(), user.getPhoneNumber(), user.getPassword());
+    }
+
+    public static void checkNew(User user) {
+        if (user.getId() != null) {
+            throw new IllegalRequestDataException("User must be new (id=null)");
+        }
     }
 }

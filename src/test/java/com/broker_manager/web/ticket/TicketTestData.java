@@ -29,11 +29,11 @@ public class TicketTestData {
     public static final Ticket TICKET_ANALYTICAL_1 = new Ticket(TICKET_ID_1, Operation.BUY, false,
             LocalDateTime.of(2023, 1, 20, 10, 0), null, BROKER_ANALYTICAL_1, CHIEF_BROKER_ANALYTICAL, STOCKS_IN_TICKET_ANALYTICAL_1);
     public static final Ticket TICKET_ANALYTICAL_2 = new Ticket(TICKET_ID_2, Operation.SELL, false,
-            LocalDateTime.of(2023, 2, 10, 16, 30), null, BROKER_ANALYTICAL_1, CHIEF_BROKER_ANALYTICAL, STOCKS_IN_TICKET_ANALYTICAL_2);
+            LocalDateTime.of(2023, 1, 10, 16, 30), null, BROKER_ANALYTICAL_1, CHIEF_BROKER_ANALYTICAL, STOCKS_IN_TICKET_ANALYTICAL_2);
     public static final Ticket TICKET_ANALYTICAL_3 = new Ticket(TICKET_ID_3, Operation.SELL, false,
-            LocalDateTime.of(2023, 1, 25, 11, 30), null, BROKER_ANALYTICAL_2, CHIEF_BROKER_ANALYTICAL, STOCKS_IN_TICKET_ANALYTICAL_3);
+            LocalDateTime.of(2023, 2, 25, 11, 30), null, BROKER_ANALYTICAL_2, CHIEF_BROKER_ANALYTICAL, STOCKS_IN_TICKET_ANALYTICAL_3);
     public static final Ticket TICKET_ANALYTICAL_4 = new Ticket(TICKET_ID_4, Operation.SELL, false,
-            LocalDateTime.of(2023, 1, 25, 11, 30), null, BROKER_ANALYTICAL_2, CHIEF_BROKER_ANALYTICAL, STOCKS_IN_TICKET_ANALYTICAL_4);
+            LocalDateTime.of(2023, 2, 25, 12, 30), null, BROKER_ANALYTICAL_2, CHIEF_BROKER_ANALYTICAL, STOCKS_IN_TICKET_ANALYTICAL_4);
 
     public static final List<Ticket> TICKETS_FOR_BROKER_ANALYTICAL = List.of(TICKET_ANALYTICAL_1, TICKET_ANALYTICAL_2);
     public static final List<Ticket> TICKETS_FOR_DEPARTMENT_ANALYTICAL = List.of(TICKET_ANALYTICAL_1, TICKET_ANALYTICAL_2, TICKET_ANALYTICAL_3, TICKET_ANALYTICAL_4);

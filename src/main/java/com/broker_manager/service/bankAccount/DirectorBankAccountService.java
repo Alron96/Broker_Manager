@@ -48,6 +48,7 @@ public class DirectorBankAccountService {
             bankAccount.setStockInBankAccounts(stockInBankAccountRepository.findByBankAccount(bankAccount));
             bankAccount.setStockInBankAccounts((List<StockInBankAccount>) bankAccountTransactionRepository.findByBankAccount(bankAccount));
         }
+
         return bankAccount;
     }
 
@@ -59,7 +60,8 @@ public class DirectorBankAccountService {
                 throw new IllegalArgumentException("Department already has a bank account");
             }
             authUser.getUser().setBankAccounts((List<BankAccount>) bankAccount);
-        } else if (bankAccount.getType() == Type.PERSONAL) {
+        }
+        else if (bankAccount.getType() == Type.PERSONAL) {
             // Проверяем, есть ли у пользователя личный счет
             if (authUser.getUser().getBankAccounts() != null) {
                 throw new IllegalArgumentException("User already has a personal bank account");
