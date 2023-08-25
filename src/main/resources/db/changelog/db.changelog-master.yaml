@@ -19,3 +19,17 @@ databaseChangeLog:
       file: db/changelog/changeset/09-create-table-investor.sql
   - include:
       file: db/changelog/changeset/10-insert-into-user.sql
+  - include:
+      file: db/changelog/changeset/11-update-user.sql
+  - include:
+      file: db/changelog/changeset/12-insert-into-stock.sql
+  - include:
+      file: db/changelog/changeset/13-insert-into-ticket.sql
+  - include:
+      file: db/changelog/changeset/14-insert-into-stock-in-ticket.sql
+  - include:
+      file: db/changelog/changeset/15-insert-into-bank-account.sql
+  - include:
+      file: db/changelog/changeset/16-insert-into-user-bank-account.sql
+  - include:
+      file: db/changelog/changeset/17-insert-into-stock-in-bank-account.sql

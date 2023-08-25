@@ -4,6 +4,7 @@ import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,11 +17,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByDepartmentAndId(Department department, Integer id);
 
-    List<User> findByRole(Role role);
+    @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
+    Optional<User> findByEmailIgnoreCase(String email);
 
-    @Override
-    Optional<User> findById(Integer integer);
-
-
+    @Query("SELECT u FROM User u JOIN FETCH u.bankAccounts b WHERE b.id=:id")
+    List<User> findByBankAccounts(Integer id);
 }
 

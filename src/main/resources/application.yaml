@@ -8,16 +8,14 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
+        format_sql: true
+        use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
     open-in-view: false
 
   liquibase:
     enabled: true
-
-#  security:
-#    user:
-#      name: user
-#      password: 1
 
 logging:
   level:

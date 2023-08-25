@@ -4,6 +4,7 @@ import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Role;
 import com.broker_manager.util.validation.NoHtml;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User{
     @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,19 +34,20 @@ public class User {
     @NoHtml
     private String fullName;
 
-    @Column(name = "email", unique = true, updatable = false, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is not correct")
     @Size(max = 128)
     private String email;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number", unique = true, nullable = false)
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
 
     @Column(name = "password", nullable = false)
     @NotBlank(message = "Password cannot be empty")
     @Size(min = 6, max = 128)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "department", nullable = false)
@@ -66,6 +68,9 @@ public class User {
     @JsonIgnore
     private List<BankAccount> bankAccounts;
 
+    public <E> User(Object o, String fullName, String toLowerCase, String phoneNumber, String password, Department department, Role role, List<E> bankAccounts) {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,4 +88,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, fullName, email, phoneNumber, department, role);
     }
+
 }
