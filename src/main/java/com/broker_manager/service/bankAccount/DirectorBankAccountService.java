@@ -1,7 +1,7 @@
 package com.broker_manager.service.bankAccount;
 
 import com.broker_manager.model.BankAccount;
-import com.broker_manager.model.BankAccountTransaction;
+import com.broker_manager.model.StockInBankAccount;
 import com.broker_manager.model.enums.Type;
 import com.broker_manager.repository.BankAccountRepository;
 import com.broker_manager.repository.BankAccountTransactionRepository;
@@ -46,9 +46,8 @@ public class DirectorBankAccountService {
 
         if (bankAccount != null) {
             bankAccount.setStockInBankAccounts(stockInBankAccountRepository.findByBankAccount(bankAccount));
-            bankAccount.setStockInBankAccounts(((BankAccountTransaction) bankAccountTransactionRepository.findByBankAccount(bankAccount)).getStockInBankAccounts());
+            bankAccount.setStockInBankAccounts((List<StockInBankAccount>) bankAccountTransactionRepository.findByBankAccount(bankAccount));
         }
-
         return bankAccount;
     }
 
@@ -59,14 +58,13 @@ public class DirectorBankAccountService {
             if (bankAccountRepository.findByDepartment(authUser.getUser().getDepartment()) != null) {
                 throw new IllegalArgumentException("Department already has a bank account");
             }
-            authUser.setBankAccount(bankAccount);
-        }
-        else if (bankAccount.getType() == Type.PERSONAL) {
+            authUser.getUser().setBankAccounts((List<BankAccount>) bankAccount);
+        } else if (bankAccount.getType() == Type.PERSONAL) {
             // Проверяем, есть ли у пользователя личный счет
             if (authUser.getUser().getBankAccounts() != null) {
                 throw new IllegalArgumentException("User already has a personal bank account");
             }
-            authUser.setBankAccount(bankAccount);
+            authUser.getUser().setBankAccounts((List<BankAccount>) bankAccount);
         }
 
         return bankAccountRepository.save(bankAccount);

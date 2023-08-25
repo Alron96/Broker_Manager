@@ -2,7 +2,6 @@ package com.broker_manager.service.bankAccountTransaction;
 
 import com.broker_manager.model.BankAccount;
 import com.broker_manager.model.BankAccountTransaction;
-import com.broker_manager.model.User;
 import com.broker_manager.repository.BankAccountRepository;
 import com.broker_manager.repository.BankAccountTransactionRepository;
 import com.broker_manager.web.AuthorizedUser;
@@ -36,7 +35,7 @@ public class DirectorBankAccountTransactionService {
         bankAccountTransaction.setSenderBankAccountId(senderBankAccount);
         bankAccountTransaction.setRecipientBankAccountId(recipientBankAccount);
         bankAccountTransaction.setAmountStock(amount);
-        bankAccountTransaction.setUsers((List<User>) authUser.getUser());
+        bankAccountTransaction.setId(authUser.getUser().getId());
         bankAccountTransaction.setWhenDone(LocalDateTime.now());
 
         senderBankAccount.setBalance(senderBankAccount.getBalance() - amount);

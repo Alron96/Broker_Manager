@@ -66,13 +66,14 @@ public class ChiefBrokerBankAccountTransactionService {
             stockInAccount.setAmount(stockInAccount.getAmount() - amount);
             stockInBankAccountRepository.save(stockInAccount);
 
-            transaction.setStockInBankAccounts(stockInAccount.getStockInBankAccounts());
+            transaction.setStock(stockInAccount.getStock());
         } else if (operation == Operation.SELL) {
             StockInBankAccount stockInAccount = new StockInBankAccount();
             stockInAccount.setStock(stockFromDatabase);
             stockInAccount.setBankAccount(senderAccount);
             stockInAccount.setAmount(amount);
             stockInBankAccountRepository.save(stockInAccount);
+            transaction.setStock(stockInAccount.getStock());
         }
 
         double totalPurchasePrice = purchasePrice * amount;

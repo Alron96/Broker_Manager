@@ -1,11 +1,7 @@
 package com.broker_manager.web;
 
-import com.broker_manager.model.BankAccount;
 import com.broker_manager.model.User;
-import com.broker_manager.model.enums.Department;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,11 +14,6 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
 
     @Getter
     private final User user;
-    @Getter
-    @Setter
-    @Autowired
-    BankAccount bankAccount;
-
 
     public AuthorizedUser(@NonNull User user) {
         super(user.getEmail(), user.getPassword(), Set.of(user.getRole()));
@@ -53,5 +44,4 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
     public String toString() {
         return "AuthorizedUser(id=" + user.getId() + " ,email=" + user.getEmail() + ")";
     }
-
 }

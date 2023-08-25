@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "bank_account_transaction")
@@ -14,7 +13,7 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankAccountTransaction extends BankAccount {
+public class BankAccountTransaction {
     @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,18 +50,4 @@ public class BankAccountTransaction extends BankAccount {
     @ManyToOne
     @JoinColumn(name = "stock_id")
     private Stock stock;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        BankAccountTransaction that = (BankAccountTransaction) o;
-        return Double.compare(that.transferAmount, transferAmount) == 0 && amountStock == that.amountStock && Double.compare(that.priceStock, priceStock) == 0 && Objects.equals(id, that.id) && operation == that.operation && Objects.equals(whenDone, that.whenDone) && Objects.equals(senderBankAccountId, that.senderBankAccountId) && Objects.equals(recipientBankAccountId, that.recipientBankAccountId) && Objects.equals(senderBrokerId, that.senderBrokerId) && Objects.equals(stock, that.stock);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), id, operation, transferAmount, whenDone, senderBankAccountId, recipientBankAccountId, senderBrokerId, amountStock, priceStock, stock);
-    }
-}
+   }
