@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "bank_account")
@@ -42,14 +43,22 @@ public class BankAccount {
     private List<StockInBankAccount> stockInBankAccounts;
 
     @Transient
-    private StockInBankAccount stockInBankAccount;
-
-    public boolean hasStockInBankAccount;
-
-    @Transient
-    private static BankAccount dummyBankAccount;
+    public static BankAccount dummyBankAccount;
 
     public static BankAccount getDummyBankAccount() {
         return dummyBankAccount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BankAccount that = (BankAccount) o;
+        return Double.compare(that.balance, balance) == 0 && Objects.equals(id, that.id) && Objects.equals(name, that.name) && department == that.department && type == that.type && Objects.equals(users, that.users) && Objects.equals(stockInBankAccounts, that.stockInBankAccounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, balance, department, type, users, stockInBankAccounts);
     }
 }

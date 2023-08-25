@@ -5,6 +5,7 @@ import com.broker_manager.model.Stock;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Operation;
 import com.broker_manager.service.bankAccountTransaction.ChiefBrokerBankAccountTransactionService;
+import com.broker_manager.util.error.InsufficientStocksException;
 import com.broker_manager.web.AuthorizedUser;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class ChiefBrokerBankAccountTransactionController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public BankAccountTransaction createBankAccountTransaction(@Valid @RequestBody Stock stock, Integer amount, Operation operation,
-                                                               @AuthenticationPrincipal AuthorizedUser authUser) {
+                                                               @AuthenticationPrincipal AuthorizedUser authUser) throws InsufficientStocksException {
         // Создать новую BankAccountTransaction с автопростановкой текущих даты и времени
         // sender_bank_account - это BankAccount отдела
         // recipient_bank_account - это BankAccount биржи (он будет создан в качестве заглушки и для всех един)

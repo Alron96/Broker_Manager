@@ -39,13 +39,13 @@ public class DirectorBankAccountTransactionController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public BankAccountTransaction createBankAccountTransaction(@Valid @RequestBody BankAccount senderBankAccount, @Valid @RequestBody BankAccount recipientBankAccount,
-                                                               Double amount, @AuthenticationPrincipal AuthorizedUser authUser) {
+                                                               int amount, @AuthenticationPrincipal AuthorizedUser authUser) {
         // Создать новую BankAccountTransaction с автопростановкой текущих даты и времени и изменением в счетах BankAccount, указанных в BankAccountTransaction
         BankAccountTransaction bankAccountTransaction = new BankAccountTransaction();
-        bankAccountTransaction.setSenderBankAccount(senderBankAccount);
-        bankAccountTransaction.setRecipientBankAccount(recipientBankAccount);
-        bankAccountTransaction.setAmount(amount);
-        bankAccountTransaction.setExecutionDate(LocalDateTime.now());
+        bankAccountTransaction.setSenderBankAccountId(senderBankAccount);
+        bankAccountTransaction.setRecipientBankAccountId(recipientBankAccount);
+        bankAccountTransaction.setAmountStock(amount);
+        bankAccountTransaction.setWhenDone(LocalDateTime.now());
 
         // Вызов метода createBankAccountTransaction() из сервисного класса
         return directorBankAccountTransactionService.createBankAccountTransaction(senderBankAccount, recipientBankAccount, amount, authUser);

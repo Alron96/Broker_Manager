@@ -2,9 +2,12 @@ package com.broker_manager.service.bankAccount;
 
 import com.broker_manager.model.BankAccount;
 import com.broker_manager.model.BankAccountTransaction;
-import com.broker_manager.model.StockInBankAccount;
+import com.broker_manager.model.enums.Type;
 import com.broker_manager.repository.BankAccountRepository;
+import com.broker_manager.repository.BankAccountTransactionRepository;
+import com.broker_manager.repository.StockInBankAccountRepository;
 import com.broker_manager.web.AuthorizedUser;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,9 +18,13 @@ import java.util.Optional;
 public class DirectorBankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
+    private final StockInBankAccountRepository stockInBankAccountRepository;
+    private final BankAccountTransactionRepository bankAccountTransactionRepository;
 
-    public DirectorBankAccountService(BankAccountRepository bankAccountRepository) {
+    public DirectorBankAccountService(BankAccountRepository bankAccountRepository, StockInBankAccountRepository stockInBankAccountRepository, BankAccountTransactionRepository bankAccountTransactionRepository) {
         this.bankAccountRepository = bankAccountRepository;
+        this.stockInBankAccountRepository = stockInBankAccountRepository;
+        this.bankAccountTransactionRepository = bankAccountTransactionRepository;
     }
 
     public List<BankAccount> getAllBankAccounts() {
@@ -25,7 +32,7 @@ public class DirectorBankAccountService {
         List<BankAccount> bankAccountsWithoutStock = new ArrayList<>();
 
         for (BankAccount bankAccount : allBankAccounts) {
-            if (bankAccount.getStockInBankAccount() == null) {
+            if (bankAccount.getStockInBankAccounts() == null) {
                 bankAccountsWithoutStock.add(bankAccount);
             }
         }
@@ -33,37 +40,42 @@ public class DirectorBankAccountService {
         return bankAccountsWithoutStock;
     }
 
+    @Transactional
     public BankAccount getBankAccount(Integer id) {
         BankAccount bankAccount = bankAccountRepository.findById(id).orElse(null);
 
         if (bankAccount != null) {
-            if (bankAccount instanceof StockInBankAccount) {
-                StockInBankAccount stockInBankAccount = (StockInBankAccount) bankAccount;
-                return stockInBankAccount;
-
-            } else if (bankAccount instanceof BankAccountTransaction) {
-                BankAccountTransaction bankAccountTransaction = (BankAccountTransaction) bankAccount;
-                return bankAccountTransaction;
-
-            }
+            bankAccount.setStockInBankAccounts(stockInBankAccountRepository.findByBankAccount(bankAccount));
+            bankAccount.setStockInBankAccounts(((BankAccountTransaction) bankAccountTransactionRepository.findByBankAccount(bankAccount)).getStockInBankAccounts());
         }
 
         return bankAccount;
     }
 
+
     public BankAccount createBankAccount(BankAccount bankAccount, AuthorizedUser authUser) {
-        if (authUser.getBankAccount() != null) {
-            throw new IllegalArgumentException("User already has a bank account");
+        if (bankAccount.getType() == Type.DEPARTMENT) {
+            // Проверяем, есть ли в БД счет для данного отдела
+            if (bankAccountRepository.findByDepartment(authUser.getUser().getDepartment()) != null) {
+                throw new IllegalArgumentException("Department already has a bank account");
+            }
+            authUser.setBankAccount(bankAccount);
+        }
+        else if (bankAccount.getType() == Type.PERSONAL) {
+            // Проверяем, есть ли у пользователя личный счет
+            if (authUser.getUser().getBankAccounts() != null) {
+                throw new IllegalArgumentException("User already has a personal bank account");
+            }
+            authUser.setBankAccount(bankAccount);
         }
 
-        authUser.setBankAccount(bankAccount);
         return bankAccountRepository.save(bankAccount);
     }
 
     public void deleteBankAccount(Integer id) {
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(id);
-        if (bankAccount.isPresent() && bankAccount.get().getBalance() == 0 && bankAccount.get().getStockInBankAccount() != null && !bankAccount.get().getStockInBankAccount().isHasStockInBankAccount()) {
-            bankAccountRepository.deleteById(id);
+        if (bankAccount.isPresent() && bankAccount.get().getBalance() == 0 && bankAccount.get().getStockInBankAccounts() == null) {
+            bankAccount.get();
         }
     }
 }

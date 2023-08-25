@@ -2,6 +2,7 @@ package com.broker_manager.service.bankAccountTransaction;
 
 import com.broker_manager.model.BankAccount;
 import com.broker_manager.model.BankAccountTransaction;
+import com.broker_manager.model.User;
 import com.broker_manager.repository.BankAccountRepository;
 import com.broker_manager.repository.BankAccountTransactionRepository;
 import com.broker_manager.web.AuthorizedUser;
@@ -30,13 +31,13 @@ public class DirectorBankAccountTransactionService {
         return bankAccountTransactionRepository.findById(id).orElse(null);
     }
 
-    public BankAccountTransaction createBankAccountTransaction(BankAccount senderBankAccount, BankAccount recipientBankAccount, Double amount, AuthorizedUser authUser) {
+    public BankAccountTransaction createBankAccountTransaction(BankAccount senderBankAccount, BankAccount recipientBankAccount, int amount, AuthorizedUser authUser) {
         BankAccountTransaction bankAccountTransaction = new BankAccountTransaction();
-        bankAccountTransaction.setSenderBankAccount(senderBankAccount);
-        bankAccountTransaction.setRecipientBankAccount(recipientBankAccount);
-        bankAccountTransaction.setAmount(amount);
-        bankAccountTransaction.setAuthUser(authUser);
-        bankAccountTransaction.setExecutionDate(LocalDateTime.now());
+        bankAccountTransaction.setSenderBankAccountId(senderBankAccount);
+        bankAccountTransaction.setRecipientBankAccountId(recipientBankAccount);
+        bankAccountTransaction.setAmountStock(amount);
+        bankAccountTransaction.setUsers((List<User>) authUser.getUser());
+        bankAccountTransaction.setWhenDone(LocalDateTime.now());
 
         senderBankAccount.setBalance(senderBankAccount.getBalance() - amount);
         recipientBankAccount.setBalance(recipientBankAccount.getBalance() + amount);

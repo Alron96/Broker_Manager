@@ -21,7 +21,7 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends BankAccount {
     @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,6 +87,4 @@ public class User {
         return Objects.hash(id, fullName, email, phoneNumber, department, role);
     }
 
-    @Transient
-    private BankAccount bankAccount;
 }

@@ -1,13 +1,11 @@
 package com.broker_manager.model;
 
 import com.broker_manager.model.enums.Operation;
-import com.broker_manager.web.AuthorizedUser;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "bank_account_transaction")
@@ -54,28 +52,17 @@ public class BankAccountTransaction extends BankAccount {
     @JoinColumn(name = "stock_id")
     private Stock stock;
 
-    @Transient
-    @NotNull
-    private BankAccount senderBankAccount;
-
-    @NotNull
-    @Transient
-    private BankAccount recipientBankAccount;
-
-    @NotNull
-    @Transient
-    private Double amount;
-
-    @Transient
-    private LocalDateTime executionDate;
-
-    public LocalDateTime getExecutionDate() {
-        return executionDate;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BankAccountTransaction that = (BankAccountTransaction) o;
+        return Double.compare(that.transferAmount, transferAmount) == 0 && amountStock == that.amountStock && Double.compare(that.priceStock, priceStock) == 0 && Objects.equals(id, that.id) && operation == that.operation && Objects.equals(whenDone, that.whenDone) && Objects.equals(senderBankAccountId, that.senderBankAccountId) && Objects.equals(recipientBankAccountId, that.recipientBankAccountId) && Objects.equals(senderBrokerId, that.senderBrokerId) && Objects.equals(stock, that.stock);
     }
 
-    @Transient
-    private AuthorizedUser authUser;
-    public AuthorizedUser getAuthUser() {
-        return authUser;
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id, operation, transferAmount, whenDone, senderBankAccountId, recipientBankAccountId, senderBrokerId, amountStock, priceStock, stock);
     }
 }

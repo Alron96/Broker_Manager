@@ -31,17 +31,17 @@ public class BrokerBankAccountTransactionService {
 
     public BankAccountTransaction createBankAccountTransaction(Stock stock, Integer amount, Operation operation, AuthorizedUser authUser) {
         BankAccountTransaction bankAccountTransaction = new BankAccountTransaction();
-        bankAccountTransaction.setExecutionDate(LocalDateTime.now());
-        bankAccountTransaction.setSenderBankAccount(authUser.getUser().getBankAccount());
+        bankAccountTransaction.setWhenDone(LocalDateTime.now());
+        bankAccountTransaction.setSenderBankAccountId(authUser.getUser());
 
         if (operation == Operation.BUY) {
 
             BankAccount recipientBankAccount = determineRecipientBankAccountForBuy(stock);
-            bankAccountTransaction.setRecipientBankAccount(recipientBankAccount);
+            bankAccountTransaction.getRecipientBankAccountId();
         } else if (operation == Operation.SELL) {
 
             BankAccount recipientBankAccount = determineRecipientBankAccountForSell(stock);
-            bankAccountTransaction.setRecipientBankAccount(recipientBankAccount);
+            bankAccountTransaction.setRecipientBankAccountId(recipientBankAccount);
         }
 
         return bankAccountTransactionRepository.save(bankAccountTransaction);

@@ -1,5 +1,6 @@
 package com.broker_manager.repository;
 
+import com.broker_manager.model.BankAccount;
 import com.broker_manager.model.BankAccountTransaction;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
@@ -13,4 +14,6 @@ public interface BankAccountTransactionRepository extends JpaRepository<BankAcco
     List<BankAccountTransaction> findAllByUserOrderByExecutionDateDesc(User user);
 
     List<BankAccountTransaction> findByDepartmentOrderByExecutionDateDesc(Department department);
+
+    Object findByBankAccount(BankAccount bankAccount);
 }
