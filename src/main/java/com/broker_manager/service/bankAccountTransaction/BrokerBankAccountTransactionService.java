@@ -5,7 +5,9 @@ import com.broker_manager.model.BankAccountTransaction;
 import com.broker_manager.model.Stock;
 import com.broker_manager.model.enums.Operation;
 import com.broker_manager.repository.BankAccountTransactionRepository;
+import com.broker_manager.repository.StockRepository;
 import com.broker_manager.web.AuthorizedUser;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,9 +17,12 @@ import java.util.Optional;
 @Service
 public class BrokerBankAccountTransactionService {
     private final BankAccountTransactionRepository bankAccountTransactionRepository;
+    private final StockRepository stockRepository;
 
-    public BrokerBankAccountTransactionService(BankAccountTransactionRepository bankAccountTransactionRepository) {
+    public BrokerBankAccountTransactionService(BankAccountTransactionRepository bankAccountTransactionRepository,
+                                               StockRepository stockRepository) {
         this.bankAccountTransactionRepository = bankAccountTransactionRepository;
+        this.stockRepository = stockRepository;
     }
 
     public List<BankAccountTransaction> getAllBankAccountTransactionsByUser(AuthorizedUser authUser) {
@@ -32,7 +37,7 @@ public class BrokerBankAccountTransactionService {
     public BankAccountTransaction createBankAccountTransaction(Stock stock, Integer amount, Operation operation, AuthorizedUser authUser) {
         BankAccountTransaction bankAccountTransaction = new BankAccountTransaction();
         bankAccountTransaction.setWhenDone(LocalDateTime.now());
-        bankAccountTransaction.setSenderBankAccountId(authUser.getUser());
+        bankAccountTransaction.setSenderBankAccountId(authUser.getBankAccount());
 
         if (operation == Operation.BUY) {
 
@@ -51,19 +56,16 @@ public class BrokerBankAccountTransactionService {
         // Логика для определения получателя при покупке акций
         // Например, можно выбрать основной счет или другой счет пользователя
         // в зависимости от определенных правил бизнес-логики
-        return stock.getBankAccount();
+        return bankAccountTransactionRepository.findAllByUserOrderByPriceBuyDesc(stock);
     }
 
     private BankAccount determineRecipientBankAccountForSell(Stock stock) {
         // Логика для определения получателя при продаже акций
         // Например, можно выбрать основной счет или другой счет пользователя
         // в зависимости от определенных правил бизнес-логики
-        return getDummyBankAccount();
+        return bankAccountTransactionRepository.findAllByUserOrderByPriceSellDesc(stock);
     }
 
-    private BankAccount getDummyBankAccount() {
-        // Заглушка для получателя банковского счета
-        return BankAccount.getDummyBankAccount();
-    }
+
 
 }

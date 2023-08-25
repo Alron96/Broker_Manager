@@ -33,8 +33,6 @@ public class Stock {
     @NotBlank(message = "Sell price cannot be empty")
     private double priceSell;
 
-    @Transient
-    private BankAccount bankAccount;
 
     @Override
     public boolean equals(Object o) {

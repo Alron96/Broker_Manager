@@ -42,13 +42,6 @@ public class BankAccount {
     @ToString.Exclude
     private List<StockInBankAccount> stockInBankAccounts;
 
-    @Transient
-    public static BankAccount dummyBankAccount;
-
-    public static BankAccount getDummyBankAccount() {
-        return dummyBankAccount;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
