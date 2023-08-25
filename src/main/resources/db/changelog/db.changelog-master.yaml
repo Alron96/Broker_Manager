@@ -27,3 +27,9 @@ databaseChangeLog:
       file: db/changelog/changeset/13-insert-into-ticket.sql
   - include:
       file: db/changelog/changeset/14-insert-into-stock-in-ticket.sql
+  - include:
+      file: db/changelog/changeset/15-insert-into-bank-account.sql
+  - include:
+    file: db/changelog/changeset/16-insert-into-user-bank-account.sql
+  - include:
+    file: db/changelog/changeset/17-insert-into-stock-in-bank-account.sql

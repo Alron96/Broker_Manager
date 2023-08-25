@@ -25,7 +25,7 @@ public class BankAccountTestData {
             1_566_018.33, Department.CONSULTING, Type.DEPARTMENT, List.of(DIRECTOR, CHIEF_BROKER_CONSULTING, BROKER_CONSULTING_1, BROKER_CONSULTING_2),
             STOCKS_IN_BANK_ACCOUNT_CONSULTING);
     public static final BankAccount BANK_ACCOUNT_PERSONAL_EMPTY = new BankAccount(BANK_ACCOUNT_PERSONAL_EMPTY_ID, "PERSONAL_ACCOUNT",
-            0.00, Department.ANALYTICAL, Type.PERSONAL, List.of(BROKER_ANALYTICAL_1), null);
+            0.00, Department.ANALYTICAL, Type.PERSONAL, List.of(DIRECTOR, BROKER_ANALYTICAL_1), null);
     public static final BankAccount BANK_ACCOUNT_EXCHANGE = new BankAccount(BANK_ACCOUNT_EXCHANGE_ID, "EXCHANGE", 100_000_000_000.00,
             Department.EXCHANGE, Type.EXCHANGE, List.of(), null);
 
