@@ -36,10 +36,10 @@ public class DirectorBankAccountController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public BankAccount createBankAccount(@Valid @RequestBody BankAccount bankAccount, @AuthenticationPrincipal AuthorizedUser authUser) {
+    public BankAccount createBankAccount(@Valid @RequestBody BankAccount bankAccount) {
         // Создать новый BankAccount
         // Проверка, что у отдела или у юзера не может быть больше 1 счета
-        return directorBankAccountService.createBankAccount(bankAccount, authUser);
+        return directorBankAccountService.createBankAccount(bankAccount);
     }
 
     @DeleteMapping("/{id}")
