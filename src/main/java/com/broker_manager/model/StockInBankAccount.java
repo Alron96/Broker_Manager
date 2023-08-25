@@ -22,7 +22,7 @@ public class StockInBankAccount {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 

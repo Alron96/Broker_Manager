@@ -65,8 +65,6 @@ class DirectorBankAccountControllerTest extends AbstractControllerTest {
         int newId = created.getId();
         newBankAccount.setId(newId);
 
-        User user=userRepository.findById(2).orElse(null);
-
         BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.assertMatch(created, newBankAccount);
         BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.assertMatch(bankAccountRepository.findById(newId).orElse(null), newBankAccount);
     }

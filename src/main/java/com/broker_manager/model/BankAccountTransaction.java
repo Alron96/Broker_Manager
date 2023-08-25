@@ -30,15 +30,15 @@ public class BankAccountTransaction {
     @Column(name = "when_done", nullable = false)
     private LocalDateTime whenDone;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sender_bank_account_id", nullable = false)
     private BankAccount senderBankAccountId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipient_bank_account_id", nullable = false)
     private BankAccount recipientBankAccountId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sender_broker_id", nullable = false)
     private User senderBrokerId;
 
@@ -48,7 +48,7 @@ public class BankAccountTransaction {
     @Column(name = "price_stock")
     private double priceStock;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "stock_id")
     private Stock stock;
 

@@ -13,6 +13,9 @@ import java.util.Optional;
 
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccount, Integer> {
+
+    Optional<BankAccount> findByDepartment(Department department);
+
     Optional<BankAccount> findByDepartmentAndType(Department department, Type type);
 
     @Query("SELECT b FROM BankAccount b LEFT JOIN FETCH b.stockInBankAccounts WHERE b.id=:id")

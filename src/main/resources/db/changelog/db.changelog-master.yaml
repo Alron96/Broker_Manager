@@ -33,3 +33,5 @@ databaseChangeLog:
       file: db/changelog/changeset/16-insert-into-user-bank-account.sql
   - include:
       file: db/changelog/changeset/17-insert-into-stock-in-bank-account.sql
+  - include:
+      file: db/changelog/changeset/18-insert-into-bank-account-transaction.sql
