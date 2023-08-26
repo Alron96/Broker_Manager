@@ -1,5 +1,6 @@
 package com.broker_manager.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,12 +22,13 @@ public class StockInBankAccount {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account_id", nullable = false)
+    @JsonBackReference
     private BankAccount bankAccount;
 
     @Override
@@ -35,13 +37,11 @@ public class StockInBankAccount {
         if (o == null || getClass() != o.getClass()) return false;
         StockInBankAccount stockInBankAccount = (StockInBankAccount) o;
         return Objects.equals(id, stockInBankAccount.id)
-                && Objects.equals(amount, stockInBankAccount.amount)
-                && Objects.equals(stock, stockInBankAccount.stock)
-                && Objects.equals(bankAccount, stockInBankAccount.bankAccount);
+                && Objects.equals(amount, stockInBankAccount.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount, stock, bankAccount);
+        return Objects.hash(id, amount);
     }
 }

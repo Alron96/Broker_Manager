@@ -1,54 +1,43 @@
 package com.broker_manager.service.bankAccount;
 
 import com.broker_manager.model.BankAccount;
-import com.broker_manager.model.StockInBankAccount;
 import com.broker_manager.model.User;
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Type;
 import com.broker_manager.repository.BankAccountRepository;
-import com.broker_manager.repository.StockInBankAccountRepository;
 import com.broker_manager.repository.UserRepository;
+import com.broker_manager.util.error.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DirectorBankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
-    private final StockInBankAccountRepository stockInBankAccountRepository;
     private final UserRepository userRepository;
 
-    public DirectorBankAccountService(BankAccountRepository bankAccountRepository,
-                                      StockInBankAccountRepository stockInBankAccountRepository, UserRepository userRepository) {
+    public DirectorBankAccountService(BankAccountRepository bankAccountRepository, UserRepository userRepository) {
         this.bankAccountRepository = bankAccountRepository;
-        this.stockInBankAccountRepository = stockInBankAccountRepository;
         this.userRepository = userRepository;
     }
 
     public List<BankAccount> getAllBankAccounts() {
         List<BankAccount> allBankAccounts = bankAccountRepository.findAll();
-        for (BankAccount b : allBankAccounts) {
-            b.setStockInBankAccounts(null);
-        }
+
         return allBankAccounts.stream().filter(ba -> !(ba.getDepartment().equals(Department.EXCHANGE) && ba.getType().equals(Type.EXCHANGE))).toList();
     }
 
     @Transactional
     public BankAccount getBankAccount(Integer id) {
-        BankAccount bankAccount = bankAccountRepository.findById(id).orElse(null);
-        if (bankAccount != null) {
-            Optional<StockInBankAccount> stockInBankAccount = stockInBankAccountRepository.findByBankAccount(bankAccount);
-            if (stockInBankAccount.isPresent()) {
-                bankAccount.setStockInBankAccounts(stockInBankAccount.stream().toList());
-            } else {
-                bankAccount.setStockInBankAccounts(null);
-            }
-            bankAccount.setUsers(userRepository.findByBankAccounts(id));
-        }
+        BankAccount bankAccount = bankAccountRepository.findBankAccountWithStocksById(id)
+                .orElseThrow(() -> new NotFoundException("Bank account not found"));
+
+        List<User> users = userRepository.findByBankAccounts(id);
+        bankAccount.setUsers(users);
+
         return bankAccount;
     }
 
