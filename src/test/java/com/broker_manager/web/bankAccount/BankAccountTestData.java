@@ -12,9 +12,11 @@ import static com.broker_manager.web.user.UserTestData.*;
 
 public class BankAccountTestData {
     public static final MatcherFactory.Matcher<BankAccount> BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS =
-            MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class, "stockInBankAccounts", "users");
+            MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class,
+                    "stockInBankAccounts", "users");
     public static final MatcherFactory.Matcher<BankAccount> BANK_ACCOUNT_MATCHER_WITH_STOCKS_AND_USERS =
-            MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class, "stockInBankAccounts.bankAccount", "stockInBankAccounts.stock", "users.bankAccounts","users.password");
+            MatcherFactory.usingIgnoringFieldsComparator(BankAccount.class,
+                    "stockInBankAccounts.bankAccount", "stockInBankAccounts.stock", "users.bankAccounts","users.password");
 
     public static final int BANK_ACCOUNT_COMPANY_ID = 1;
     public static final int BANK_ACCOUNT_CONSULTING_ID = 2;
@@ -37,6 +39,6 @@ public class BankAccountTestData {
 
     public static BankAccount getNewBankAccount() {
         return new BankAccount(null, "ANALYTICAL_ACCOUNT", 2_000_000.00, Department.ANALYTICAL, Type.DEPARTMENT,
-                List.of(DIRECTOR, CHIEF_BROKER_ANALYTICAL, BROKER_ANALYTICAL_1, BROKER_ANALYTICAL_2), null);
+                List.of(CHIEF_BROKER_ANALYTICAL, BROKER_ANALYTICAL_1, BROKER_ANALYTICAL_2), null);
     }
 }

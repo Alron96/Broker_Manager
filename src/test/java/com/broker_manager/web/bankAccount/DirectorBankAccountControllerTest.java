@@ -2,7 +2,9 @@ package com.broker_manager.web.bankAccount;
 
 import com.broker_manager.AbstractControllerTest;
 import com.broker_manager.model.BankAccount;
+import com.broker_manager.model.User;
 import com.broker_manager.repository.BankAccountRepository;
+import com.broker_manager.repository.UserRepository;
 import com.broker_manager.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
 
 import static com.broker_manager.web.bankAccount.BankAccountTestData.*;
 import static com.broker_manager.web.user.UserTestData.DIRECTOR_MAIL;
@@ -23,6 +27,9 @@ class DirectorBankAccountControllerTest extends AbstractControllerTest {
 
     @Autowired
     private BankAccountRepository bankAccountRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @WithUserDetails(value = DIRECTOR_MAIL)
@@ -57,6 +64,9 @@ class DirectorBankAccountControllerTest extends AbstractControllerTest {
         BankAccount created = BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.readFromJson(action);
         int newId = created.getId();
         newBankAccount.setId(newId);
+
+        User user=userRepository.findById(2).orElse(null);
+
         BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.assertMatch(created, newBankAccount);
         BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.assertMatch(bankAccountRepository.findById(newId).orElse(null), newBankAccount);
     }
