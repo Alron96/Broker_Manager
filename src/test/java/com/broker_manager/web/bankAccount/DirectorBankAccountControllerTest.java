@@ -31,17 +31,17 @@ class DirectorBankAccountControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS.contentJson(BANK_ACCOUNTS_FOR_DIRECTOR));
+                .andExpect(BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.contentJson(BANK_ACCOUNTS_FOR_DIRECTOR));
     }
 
     @Test
     @WithUserDetails(value = DIRECTOR_MAIL)
     void getBankAccount() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "/" + BANK_ACCOUNT_COMPANY_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + "/" + BANK_ACCOUNT_CONSULTING_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(BANK_ACCOUNT_MATCHER.contentJson(BANK_ACCOUNT_COMPANY));
+                .andExpect(BANK_ACCOUNT_MATCHER_WITH_STOCKS_AND_USERS.contentJson(BANK_ACCOUNT_CONSULTING));
     }
 
     @Test
@@ -54,11 +54,11 @@ class DirectorBankAccountControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        BankAccount created = BANK_ACCOUNT_MATCHER.readFromJson(action);
+        BankAccount created = BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.readFromJson(action);
         int newId = created.getId();
         newBankAccount.setId(newId);
-        BANK_ACCOUNT_MATCHER.assertMatch(created, newBankAccount);
-        BANK_ACCOUNT_MATCHER.assertMatch(bankAccountRepository.findById(newId).orElse(null), newBankAccount);
+        BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.assertMatch(created, newBankAccount);
+        BANK_ACCOUNT_MATCHER_WITHOUT_STOCKS_AND_USERS.assertMatch(bankAccountRepository.findById(newId).orElse(null), newBankAccount);
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.broker_manager.model;
 
 import com.broker_manager.model.enums.Department;
 import com.broker_manager.model.enums.Type;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,12 +37,13 @@ public class BankAccount {
     @Enumerated
     private Type type;
 
-    @ManyToMany(mappedBy = "bankAccounts", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "bankAccounts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<User> users;
 
-    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonManagedReference
     private List<StockInBankAccount> stockInBankAccounts;
 
     @Override
@@ -49,11 +51,11 @@ public class BankAccount {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BankAccount that = (BankAccount) o;
-        return Double.compare(that.balance, balance) == 0 && Objects.equals(id, that.id) && Objects.equals(name, that.name) && department == that.department && type == that.type && Objects.equals(users, that.users) && Objects.equals(stockInBankAccounts, that.stockInBankAccounts);
+        return Double.compare(that.balance, balance) == 0 && Objects.equals(id, that.id) && Objects.equals(name, that.name) && department == that.department && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, balance, department, type, users, stockInBankAccounts);
+        return Objects.hash(id, name, balance, department, type);
     }
 }
