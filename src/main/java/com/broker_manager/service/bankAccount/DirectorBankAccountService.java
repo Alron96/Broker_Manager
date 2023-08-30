@@ -38,6 +38,10 @@ public class DirectorBankAccountService {
         BankAccount bankAccount = bankAccountRepository.findBankAccountWithStocksById(id)
                 .orElseThrow(() -> new NotFoundException("Bank account not found"));
 
+        if (bankAccount.getDepartment().equals(Department.EXCHANGE) && bankAccount.getType().equals(Type.EXCHANGE)) {
+            throw new NotFoundException("Bank account not found");
+        }
+
         List<User> users = userRepository.findByBankAccounts(id);
         bankAccount.setUsers(users);
 
@@ -73,6 +77,8 @@ public class DirectorBankAccountService {
                 .orElseThrow(() -> new UnsupportedOperationException("Bank account not exist"));
         if (bankAccount.getBalance() == 0.0 && (bankAccount.getStockInBankAccounts() == null || bankAccount.getStockInBankAccounts().isEmpty())) {
             bankAccountRepository.deleteById(id);
+        } else {
+            throw new UnsupportedOperationException("Bank account not empty");
         }
     }
 
