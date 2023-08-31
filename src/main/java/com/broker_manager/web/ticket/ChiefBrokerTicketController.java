@@ -25,15 +25,13 @@ public class ChiefBrokerTicketController {
     @GetMapping
     public List<Ticket> getAllTicketByDepartment(@PathVariable String department, @AuthenticationPrincipal AuthorizedUser authUser) {
         // Вывести список Ticket без stockInTicket данного Department
-//        return chiefBrokerTicketService.getAllTicketByDepartment(department, authUser.getUser());
-        return null;
+        return chiefBrokerTicketService.getAllTicketByDepartment(department, authUser.getUser());
     }
 
     @GetMapping("/{id}")
     public Ticket getTicketByDepartment(@PathVariable String department, @PathVariable Integer id, @AuthenticationPrincipal AuthorizedUser authUser) {
-//         Вывести Ticket с stockInTicket и BankAccountTransaction
-//        return chiefBrokerTicketService.getTicketByDepartment(department,id,authUser.getUser());
-        return null;
+//         Вывести Ticket с stockInTicket и c BankAccountTransaction
+        return chiefBrokerTicketService.getTicketByDepartment(department,id,authUser.getUser());
 
     }
 
@@ -44,12 +42,13 @@ public class ChiefBrokerTicketController {
         // Создать Ticket с stockInTicket
         // В сервисе сделать преобразование из TicketTo в Ticket и сохранить в БД
         // Недостающие данные при конвертации из TicketTO в Ticket заполнить значениями по умолчанию
-        return null;
+        return chiefBrokerTicketService.createTicket(department, ticketTo, authUser);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTicket(@PathVariable Integer id, @RequestParam Integer chiefId) {
         // Удалять Ticket с stockInTicket, но только если статус ticket false и статус каждого stockInTicket внутри этого Ticket false
+
     }
 }

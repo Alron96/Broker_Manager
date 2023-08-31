@@ -39,7 +39,7 @@ public class Ticket {
     private User broker;
 
     @ManyToOne
-    @JoinColumn(name = "chief_broker_id", nullable = false)
+    @JoinColumn(name = "chief_broker_id", nullable = false )
     private User chiefBroker;
 
     @OneToMany(mappedBy = "ticket")
